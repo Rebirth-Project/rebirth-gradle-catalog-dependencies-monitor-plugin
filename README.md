@@ -74,9 +74,9 @@ For direct communications, you can use this [email](mailto:rebirthproject2021@gm
 
 ## Credits and License
 
-Copyright (C) 2024 [Andrea Paternesi](https://github.com/patton73)
+Copyright (C) 2025 [Andrea Paternesi](https://github.com/patton73)
 
-Copyright (C) 2024 [Matteo Veroni](https://github.com/mavek87)
+Copyright (C) 2025 [Matteo Veroni](https://github.com/mavek87)
 
 Current website under creation [Rebirth Project](https://www.rebirth-project.it)
 
