@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2024 Matteo Veroni Rebirth project
- * Modifications copyright (C) 2024 Andrea Paternesi Rebirth project
+ * Copyright (C) 2025 Matteo Veroni Rebirth project
+ * Modifications copyright (C) 2025 Andrea Paternesi Rebirth project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package it.rebirthproject.catalog_dependencies_monitor.domain.data.reports;
  * This class provides access to detailed reports for both libraries and plugins,
  * encapsulating their respective dependencies.
  */
-public class LibsAndPluginsReport {
+class LibsAndPluginsReport {
 
     DependenciesReport librariesReport;
     DependenciesReport pluginsReport;
@@ -32,7 +32,7 @@ public class LibsAndPluginsReport {
      * @param librariesReport the report containing details about library dependencies
      * @param pluginsReport the report containing details about plugin dependencies
      */
-    public LibsAndPluginsReport(DependenciesReport librariesReport, DependenciesReport pluginsReport) {
+    LibsAndPluginsReport(DependenciesReport librariesReport, DependenciesReport pluginsReport) {
         this.librariesReport = librariesReport;
         this.pluginsReport = pluginsReport;
     }
@@ -42,7 +42,7 @@ public class LibsAndPluginsReport {
      *
      * @return the libraries report
      */
-    public DependenciesReport getLibrariesReport() {
+    DependenciesReport getLibrariesReport() {
         return librariesReport;
     }
 
@@ -51,7 +51,7 @@ public class LibsAndPluginsReport {
      *
      * @return the plugins report
      */
-    public DependenciesReport getPluginsReport() {
+    DependenciesReport getPluginsReport() {
         return pluginsReport;
     }
 }
