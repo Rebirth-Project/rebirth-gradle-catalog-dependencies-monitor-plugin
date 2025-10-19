@@ -6,6 +6,9 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.regex.Pattern
 
+/**
+ * Script to automatically update all the copyright years in Groovy files, instead of doing it manually.
+ */
 final class CopyrightUpdaterScript {
     private static final int NEW_YEAR = 2025
     private static final String FILE_EXTENSION = ".groovy"
