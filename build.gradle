@@ -64,7 +64,7 @@ test {
 
 dependencies {
     implementation "it.rebirthproject:version-comparator:1.1.2"
-    implementation "org.apache.groovy:groovy-toml:5.0.1"
+    implementation "org.apache.groovy:groovy-toml:5.0.2"
    
     testImplementation "org.mockito:mockito-junit-jupiter:5.20.0"
     mockitoAgent('org.mockito:mockito-core:5.18.0') { transitive = false }
