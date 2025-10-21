@@ -33,7 +33,7 @@ plugins {
 The Gradle Catalog Dependencies Monitor Plugin is a plugin designed to simplify the management and monitoring of dependencies defined in a standard gradle catalog.
 In practice, instead of using similar plugins in every project or library, everything is centralized by moving the checks to the catalog side.
 By default, this plugin connects to the **Maven Central repository** and the **Gradle Plugin repository** to retrieve dependency metadata and verify whether newer versions are available.
-It produces a detailed report in **HTML** or **JSON** format, showing the results of this lookup and comparison process.
+It produces a detailed report in **HTML** or a **JSON** format, showing the results of this lookup and comparison process.
 The report is divided in two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative library or plugin. 
 
 ## Usage
@@ -84,5 +84,5 @@ Copyright (C) 2025 [Matteo Veroni](https://github.com/mavek87)
 
 Current website under creation [Rebirth Project](https://www.rebirth-project.it)
 
-Version Comparator binaries and source code can be used according to the [Apache License, Version 2.0](LICENSE.md).
+Gradle catalog sependencies monitor Plugin binaries and source code can be used according to the [Apache License, Version 2.0](LICENSE.md).
 
