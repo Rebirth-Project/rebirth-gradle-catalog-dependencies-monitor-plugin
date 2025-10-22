@@ -17,8 +17,8 @@
 package it.rebirthproject.catalog_dependencies_monitor.gradle.tasks
 
 import groovy.util.logging.Slf4j
-import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReportType
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.context.CatalogMonitorContext
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.file.RegularFileProperty
@@ -42,6 +42,7 @@ abstract class UpdateCatalogTask extends DefaultTask {
     @TaskAction
     void executeTask() {
         final def catalogUpdateService = catalogMonitorContext.get().catalogUpdateService
+        final def mavenRepositoryType = catalogMonitorContext.get().mavenRepositoryType
 
         final File catalogFile = fileCatalogToml.get().asFile
         checkIfFileExistsOrThrowException(catalogFile)
@@ -50,9 +51,9 @@ abstract class UpdateCatalogTask extends DefaultTask {
         checkIfFileExistsOrThrowException(jsonReportFile)
 
         log.info("updating libraries in catalog toml file...")
-        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesReportType.LIBRARIES_REPORT)
+        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, mavenRepositoryType)
         log.info("updating plugins in catalog toml file...")
-        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesReportType.PLUGINS_REPORT)
+        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)
 
         println "Dependencies updated in toml catalog file"
     }

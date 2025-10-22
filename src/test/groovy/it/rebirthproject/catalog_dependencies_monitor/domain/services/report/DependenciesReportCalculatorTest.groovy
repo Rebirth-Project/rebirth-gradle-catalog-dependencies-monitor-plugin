@@ -19,11 +19,11 @@ package it.rebirthproject.catalog_dependencies_monitor.domain.services.report
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.DependencyMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReport
-import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReportType
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependencyReport
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependencyReportState
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.factory.DependenciesRepositoryFactory
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import it.rebirthproject.versioncomparator.comparator.VersionComparatorBuilder
 import org.junit.jupiter.api.BeforeEach
@@ -40,11 +40,10 @@ class DependenciesReportCalculatorTest {
     private static final DependencyMetadata EXISTING_LIBRARY_1_WITH_NO_VERSION = new LibraryMetadata("org.slf4j", "slf4j-api", null)
     private static final DependencyMetadata EXISTING_LIBRARY_2 = new LibraryMetadata("org.mockito", "mockito-core", "5.11.0")
     private static final DependencyMetadata FAKE_LIBRARY = new LibraryMetadata("group", "artifact", "1")
-    private static final DependencyMetadata EXISTING_LIBRARY_PROBLEMATIC = new LibraryMetadata("org.cache2k", "cache2k-api", "2.6.1.Final") 
+    private static final DependencyMetadata EXISTING_LIBRARY_PROBLEMATIC = new LibraryMetadata("org.cache2k", "cache2k-api", "2.6.1.Final")
 
     private DependenciesRepositoryFactory dependenciesRepositoryFactory
     private DependenciesRepository mavenCentralMock
-    private DependenciesRepository gradlePortalsPluginMock
     private DependenciesReportCalculator reportCalculator
     private DependenciesReport dependenciesReport
     private VersionComparator versionComparator
@@ -52,11 +51,13 @@ class DependenciesReportCalculatorTest {
     @BeforeEach
     void setUp() {
         versionComparator = new VersionComparatorBuilder().useMavenRulesVersionParser().build()
+        dependenciesRepositoryFactory = mock(DependenciesRepositoryFactory.class)
         mavenCentralMock = mock(DependenciesRepository.class)
-        gradlePortalsPluginMock = mock(DependenciesRepository.class)
-        dependenciesRepositoryFactory = new DependenciesRepositoryFactory(mavenCentralMock, gradlePortalsPluginMock)
+
         reportCalculator = new DependenciesReportCalculator(versionComparator, dependenciesRepositoryFactory)
-        dependenciesReport = new DependenciesReport(DependenciesReportType.LIBRARIES_REPORT)
+        dependenciesReport = new DependenciesReport(DependenciesRepositoryType.MAVEN_CENTRAL_V2)
+
+        when(dependenciesRepositoryFactory.create(DependenciesRepositoryType.MAVEN_CENTRAL_V2)).thenReturn(mavenCentralMock)
     }
 
     @Test
@@ -71,7 +72,7 @@ class DependenciesReportCalculatorTest {
         assertEquals(0, dependenciesReport.getNotFound().getCount())
         assertEquals(1, dependenciesReport.getExcluded().getCount())
         assertEquals(0, dependenciesReport.getSkipped().getCount())
-        assertEquals(DependenciesReportType.LIBRARIES_REPORT, dependenciesReport.getReportType())
+        assertEquals(DependenciesRepositoryType.MAVEN_CENTRAL_V2, dependenciesReport.dependenciesRepositoryType)
 
         DependencyReport excludedReport = dependenciesReport.getExcluded().getReports().get(0)
         assertEquals(mavenCentralMock.getType(), excludedReport.getRepositoryType())
@@ -92,7 +93,7 @@ class DependenciesReportCalculatorTest {
         assertEquals(0, dependenciesReport.getNotFound().getCount())
         assertEquals(0, dependenciesReport.getExcluded().getCount())
         assertEquals(0, dependenciesReport.getSkipped().getCount())
-        assertEquals(DependenciesReportType.LIBRARIES_REPORT, dependenciesReport.getReportType())
+        assertEquals(DependenciesRepositoryType.MAVEN_CENTRAL_V2, dependenciesReport.dependenciesRepositoryType)
 
         DependencyReport outdatedReport = dependenciesReport.getOutdated().getReports().get(0)
         assertEquals(mavenCentralMock.getType(), outdatedReport.getRepositoryType())
@@ -117,11 +118,11 @@ class DependenciesReportCalculatorTest {
         assertEquals(0, dependenciesReport.getSkipped().getCount())
 
         dependenciesReport.getUpdated().getReports().forEach(updatedReport -> {
-                assertEquals(mavenCentralMock.getType(), updatedReport.getRepositoryType())
-                assertEquals(DependencyReportState.UPDATED, updatedReport.getReportState())
-                assertTrue(updatedReport.getDependencyInCatalog().equals(EXISTING_LIBRARY_1) || updatedReport.getDependencyInCatalog().equals(EXISTING_LIBRARY_2))
-                assertTrue(updatedReport.getDependencyInRepo().equals(EXISTING_LIBRARY_1) || updatedReport.getDependencyInRepo().equals(EXISTING_LIBRARY_2))
-            })
+            assertEquals(mavenCentralMock.getType(), updatedReport.getRepositoryType())
+            assertEquals(DependencyReportState.UPDATED, updatedReport.getReportState())
+            assertTrue(updatedReport.getDependencyInCatalog().equals(EXISTING_LIBRARY_1) || updatedReport.getDependencyInCatalog().equals(EXISTING_LIBRARY_2))
+            assertTrue(updatedReport.getDependencyInRepo().equals(EXISTING_LIBRARY_1) || updatedReport.getDependencyInRepo().equals(EXISTING_LIBRARY_2))
+        })
     }
 
     @Test
@@ -183,7 +184,7 @@ class DependenciesReportCalculatorTest {
         assertEquals(EXISTING_LIBRARY_1_MORE_UPDATED, exceedingReport.getDependencyInCatalog())
         assertEquals(EXISTING_LIBRARY_1, exceedingReport.getDependencyInRepo())
     }
-    
+
     @Test
     void testProblematicLibrary() {
         when(mavenCentralMock.getDependencies(EXISTING_LIBRARY_PROBLEMATIC)).thenReturn(Optional.of(EXISTING_LIBRARY_PROBLEMATIC))

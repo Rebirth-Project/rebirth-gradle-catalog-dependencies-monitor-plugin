@@ -80,20 +80,6 @@ class DependenciesReportCalculator {
                         report.updated.add(reportElement);
                     }
                 }
-//                if (catalogDependency.dependencyVersion == null || repoDependency.dependencyVersion == null) {
-//                    log.info("this catalog library has a null version or the library version is null in the repository.")
-//                    setReportElementState(reportElement, DependencyReportState.SKIPPED)
-//                    report.skipped.add(reportElement)
-//                } else if (versionComparator.compare(catalogDependency.dependencyVersion, repoDependency.dependencyVersion) < 0) {
-//                    setReportElementState(reportElement, DependencyReportState.OUTDATED)
-//                    report.outdated.add(reportElement)
-//                } else if (versionComparator.compare(catalogDependency.dependencyVersion, repoDependency.dependencyVersion) > 0) {
-//                    setReportElementState(reportElement, DependencyReportState.EXCEEDING)
-//                    report.exceeding.add(reportElement)
-//                } else {
-//                    setReportElementState(reportElement, DependencyReportState.UPDATED)
-//                    report.updated.add(reportElement)
-//                }
             } else {
                 log.info("No dependency found in {} with this name: {}", dependenciesRepository.getType().description, catalogDependency?.dependencyId)
                 setReportElementState(reportElement, DependencyReportState.NOT_FOUND)

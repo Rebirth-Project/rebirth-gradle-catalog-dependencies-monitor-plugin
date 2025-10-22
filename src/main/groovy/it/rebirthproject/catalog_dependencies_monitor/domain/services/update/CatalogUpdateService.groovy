@@ -19,7 +19,9 @@ package it.rebirthproject.catalog_dependencies_monitor.domain.services.update
 import groovy.json.JsonSlurper
 import groovy.toml.TomlSlurper
 import groovy.util.logging.Slf4j
-import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReportType
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
+
+import static it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType.*
 
 @Slf4j
 class CatalogUpdateService {
@@ -32,19 +34,15 @@ class CatalogUpdateService {
         this.tomlReader = tomlReader
     }
 
-    def updateOutdatedDependencies(File catalogFile, File jsonReportFile, DependenciesReportType reportType) {
-        final def specificJsonReportContent
+    def updateOutdatedDependencies(File catalogFile, File jsonReportFile, DependenciesRepositoryType dependenciesRepositoryType) {
         final def jsonReportContent = jsonReader.parse(jsonReportFile)
         log.debug("jsonReportContent: ${jsonReportContent}")
 
-        switch (reportType) {
-            case reportType.LIBRARIES_REPORT:
-                specificJsonReportContent = jsonReportContent?.librariesReport
-                break
-            case reportType.PLUGINS_REPORT:
-                specificJsonReportContent = jsonReportContent?.pluginsReport
-                break
+        def specificJsonReportContent = switch (dependenciesRepositoryType) {
+            case MAVEN_CENTRAL_V1, MAVEN_CENTRAL_V2 -> jsonReportContent?.librariesReport
+            case GRADLE_PLUGINS_PORTAL -> jsonReportContent?.pluginsReport
         }
+
         log.debug("specificJsonReportContent: ${specificJsonReportContent}")
 
         specificJsonReportContent?.outdated?.reports?.each { outdatedDependency ->
