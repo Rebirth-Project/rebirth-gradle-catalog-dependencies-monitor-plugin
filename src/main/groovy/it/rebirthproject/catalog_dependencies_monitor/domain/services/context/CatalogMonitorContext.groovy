@@ -28,7 +28,7 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Ma
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.report.DependenciesReportCalculator
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepository
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.GradlePortalRepository
-import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenRepository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenV1Repository
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.update.CatalogUpdateService
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import it.rebirthproject.versioncomparator.comparator.VersionComparatorBuilder
@@ -55,7 +55,7 @@ abstract class CatalogMonitorContext implements BuildService<Params>, AutoClosea
         final TomlSlurper tomlReader = new TomlSlurper()
         final HttpClient httpClient = new HttpClient()
         final List<String> libVersionFilters = getParameters().libraryVersionFilters.get()
-        final DependenciesRepository mavenCentral = new MavenRepository(httpClient, new MavenDependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))
+        final DependenciesRepository mavenCentral = new MavenV1Repository(httpClient, new MavenDependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))
         final DependenciesRepository gradlePortalsPlugin = new GradlePortalRepository(httpClient, new GradlePortalsPluginsResponseMapper())
         final DependenciesRepositoryFactory dependenciesRepositoryFactory = new DependenciesRepositoryFactory(mavenCentral, gradlePortalsPlugin)
         this.librariesReport = new DependenciesReport(DependenciesReportType.LIBRARIES_REPORT)

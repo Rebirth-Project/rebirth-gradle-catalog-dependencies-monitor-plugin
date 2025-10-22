@@ -23,9 +23,9 @@ import it.rebirthproject.versioncomparator.comparator.VersionComparator
 
 class MavenDependencyResponseMapper implements RepositoryResponseMapper {
 
+    private final VersionComparator versionComparator
     private final JsonSlurper jsonReader
     private final List<String> librariesFilters
-    private final VersionComparator versionComparator
 
     MavenDependencyResponseMapper(VersionComparator versionComparator, JsonSlurper jsonReader, List<String> librariesFilters) {
         this.versionComparator = versionComparator
@@ -36,26 +36,14 @@ class MavenDependencyResponseMapper implements RepositoryResponseMapper {
     @Override
     Optional<DependencyMetadata> map(String jsonMavenResponse) {
         final List<?> docs = jsonReader.parseText(jsonMavenResponse)?.response?.docs
-        return getMostRecentDependencyLibrary(docs)
+        return calculateMostRecentDependencyLibraryIfPresent(docs)
     }
 
-    private Optional<DependencyMetadata> getMostRecentDependencyLibrary(List<?> docs) {
-        DependencyMetadata latestVersionMavenDependency = null
+    private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(List<?> docs) {
         docs.stream()
                 .filter { doc -> doc != null && doc.v != null }
-                .filter { doc -> isVersionNotToFilter(doc.v as String, librariesFilters) }
-                .forEach { doc ->
-                    DependencyMetadata mavenDependency = new LibraryMetadata(doc.g, doc.a, doc.v)
-                    if (latestVersionMavenDependency == null || isDependencyVersionMoreRecentThan(mavenDependency, latestVersionMavenDependency)) {
-                        latestVersionMavenDependency = mavenDependency
-                    }
-                }
-        return Optional.ofNullable(latestVersionMavenDependency)
-    }
-
-    private boolean isDependencyVersionMoreRecentThan(DependencyMetadata mavenDependency1, DependencyMetadata mavenDependency2) {
-        final String v1 = mavenDependency1.getDependencyVersion()
-        final String v2 = mavenDependency2.getDependencyVersion()
-        return versionComparator.compare(v1, v2) > 0
+                .filter { doc -> isVersionNotToFiltered(doc.v as String, librariesFilters) }
+                .map { doc -> new LibraryMetadata(doc.g, doc.a, doc.v) }
+                .max(Comparator.comparing({ libMetadata -> libMetadata.getDependencyVersion() }, versionComparator))
     }
 }

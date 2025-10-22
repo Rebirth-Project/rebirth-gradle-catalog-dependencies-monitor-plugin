@@ -16,36 +16,24 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories
 
-import groovy.util.logging.Slf4j
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.DependencyMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpClient
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.RepositoryResponseMapper
 
 /**
- API Maven (libraries)
-
- EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=json
- EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
+ * Abstract MavenRepository of type DependenciesRepository
+ *
+ * His implementations can be either MavenV1Repository or MavenV2Repository
  */
-@Slf4j
-class MavenRepository extends DependenciesRepository {
+abstract class MavenRepository extends DependenciesRepository {
 
-    private final short resultRows = 50
-
-    MavenRepository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
-        super(httpClient, mavenRepositoryResponseMapper)
+    MavenRepository(HttpClient httpClient, RepositoryResponseMapper repositoryResponseMapper) {
+        super(httpClient, repositoryResponseMapper)
     }
 
     @Override
-    Optional<DependencyMetadata> getDependencies(DependencyMetadata dependencyMetadata) {
-        final String[] splitLibraryGroupAndArtifact = dependencyMetadata.dependencyId.split(":")
-        final String libraryGroup = splitLibraryGroupAndArtifact[0]
-        final String libraryArtifact = splitLibraryGroupAndArtifact[1]
-        final String urlMavenCentral = "https://search.maven.org/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
-        log.info("maven => GET {}", urlMavenCentral)
-        return getDependenciesFromRepository(urlMavenCentral)
-    }
+    abstract Optional<DependencyMetadata> getDependencies(DependencyMetadata dependencyMetadata)
 
     @Override
     DependenciesRepositoryType getType() {
@@ -53,6 +41,7 @@ class MavenRepository extends DependenciesRepository {
     }
 
     @Override
+    // TODO: code very similar to the one in the GradlePortalRepository... Duplication can probably be removed with refactoring... (Maybe uplift it to DependenciesRepository?)
     String getHttpUrlOfDependencyInRepository(String repositoryBaseUrl, DependencyMetadata dependencyMetadata) {
         final LibraryMetadata library = dependencyMetadata as LibraryMetadata
         if (library == null) {

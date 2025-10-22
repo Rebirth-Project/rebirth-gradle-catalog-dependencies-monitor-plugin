@@ -24,10 +24,15 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.P
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpClient
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.GradlePortalsPluginsResponseMapper
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenDependencyResponseMapper
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV2DependencyResponseMapper
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import it.rebirthproject.versioncomparator.comparator.VersionComparatorBuilder
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
+
+import java.util.stream.Stream
 
 import static org.junit.jupiter.api.Assertions.*
 
@@ -38,24 +43,28 @@ class DependenciesRepositoryTest {
     private static final DependencyMetadata FAKE_LIBRARY = new LibraryMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
     private static final DependencyMetadata FAKE_PLUGIN = new PluginMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
 
-    private DependenciesRepository mavenRepository
-    private DependenciesRepository gradleRepository
-    private VersionComparator versionComparator
+    private static MavenRepository mavenRepository
+    private static MavenRepository mavenV2Repository
+    private static DependenciesRepository gradleRepository
+    private static VersionComparator versionComparator
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         versionComparator = new VersionComparatorBuilder().useMavenRulesVersionParser().build()
         final JsonSlurper jsonSlurper = new JsonSlurper()
         final HttpClient httpClient = new HttpClient()
         final MavenDependencyResponseMapper mavenDependencyResponseMapper = new MavenDependencyResponseMapper(versionComparator, jsonSlurper, new ArrayList<>())
+        final MavenV2DependencyResponseMapper mavenV2DependencyResponseMapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())
         final GradlePortalsPluginsResponseMapper gradlePortalsPluginsResponseMapper = new GradlePortalsPluginsResponseMapper()
-        mavenRepository = new MavenRepository(httpClient, mavenDependencyResponseMapper)
+        mavenRepository = new MavenV1Repository(httpClient, mavenDependencyResponseMapper)
+        mavenV2Repository = new MavenV2Repository(httpClient, mavenV2DependencyResponseMapper)
         gradleRepository = new GradlePortalRepository(httpClient, gradlePortalsPluginsResponseMapper)
     }
 
-    @Test
-    void testMavenRepositoryFindExistingLibrary() {
-        Optional<DependencyMetadata> response = mavenRepository.getDependencies(EXISTING_LIBRARY)
+    @ParameterizedTest
+    @MethodSource("getMavenRepositoryInstance")
+    void testMavenRepositoryFindExistingLibrary(MavenRepository mavenRepositoryInstance) {
+        Optional<DependencyMetadata> response = mavenRepositoryInstance.getDependencies(EXISTING_LIBRARY)
 
         assertTrue(response.isPresent())
         DependencyMetadata foundMavenLibrary = response.get()
@@ -63,9 +72,10 @@ class DependenciesRepositoryTest {
         assertTrue(versionComparator.compare(foundMavenLibrary.getDependencyVersion(), EXISTING_LIBRARY.getDependencyVersion()) >= 0)
     }
 
-    @Test
-    void testMavenRepositoryDoesNotFindFakeLibrary() {
-        Optional<DependencyMetadata> response = mavenRepository.getDependencies(FAKE_LIBRARY)
+    @ParameterizedTest
+    @MethodSource("getMavenRepositoryInstance")
+    void testMavenRepositoryDoesNotFindFakeLibrary(DependenciesRepository mavenRepositoryInstance) {
+        Optional<DependencyMetadata> response = mavenRepositoryInstance.getDependencies(FAKE_LIBRARY)
         assertFalse(response.isPresent())
     }
 
@@ -84,5 +94,12 @@ class DependenciesRepositoryTest {
         Optional<DependencyMetadata> response = gradleRepository.getDependencies(FAKE_PLUGIN)
 
         assertFalse(response.isPresent())
+    }
+
+    private static Stream<MavenRepository> getMavenRepositoryInstance() {
+        Stream.of(
+                mavenRepository,
+                mavenV2Repository
+        )
     }
 }

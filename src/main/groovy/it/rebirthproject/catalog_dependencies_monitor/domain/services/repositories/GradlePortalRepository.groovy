@@ -52,6 +52,7 @@ class GradlePortalRepository extends DependenciesRepository {
     }
 
     @Override
+    // TODO: code very similar to the one in the MavenRepository... Duplication can probably be removed with refactoring... (Maybe uplift it to DependenciesRepository?)
     String getHttpUrlOfDependencyInRepository(String repositoryBaseUrl, DependencyMetadata dependencyMetadata) {
         final PluginMetadata plugin = dependencyMetadata as PluginMetadata
         if (plugin == null) {
