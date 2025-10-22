@@ -55,7 +55,6 @@ abstract class CalculateDependenciesUpdatesTask extends DefaultTask {
         final VersionCatalog versionCatalog = versionCatalog.get()
         final List<String> excludedLibraries = excludedLibraries.get()
         final List<String> excludedPlugins = excludedPlugins.get()
-        final String mavenRepositoryVersion = catalogMonitorContext.get().mavenRepositoryVersion
         final List<String> libraryVersionFilters = catalogMonitorContext.get().libraryVersionFilters
         final CatalogMonitorContext context = catalogMonitorContext.get()
         final DependenciesReport librariesReport = context.librariesReport
@@ -67,7 +66,6 @@ abstract class CalculateDependenciesUpdatesTask extends DefaultTask {
         pluginsReport.dateAndTime = formattedDateTime
 
         log.info("\nCatalog dependencies check started: {}", formattedDateTime)
-        log.info("maven repository version: {}", mavenRepositoryVersion)
         log.info("version catalog name: {}", versionCatalog.name)
         log.info("excluded libraries: {}", excludedLibraries)
         log.info("excluded plugins: {}", excludedPlugins)
