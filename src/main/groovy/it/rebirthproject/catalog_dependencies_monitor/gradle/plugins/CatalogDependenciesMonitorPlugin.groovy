@@ -62,7 +62,6 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             description = "Calculate a report on the dependency update status in the rebirth-catalog"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
-            mavenRepositoryVersion.convention(catalogMonitorExtension.mavenRepositoryVersion)
             excludedLibraries.convention(catalogMonitorExtension.excludedLibraries)
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
