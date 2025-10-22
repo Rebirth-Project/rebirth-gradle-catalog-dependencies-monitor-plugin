@@ -50,19 +50,41 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
     private Optional<DependencyMetadata> getMostRecentDependencyLibraryIfPresent(Document rootNode) {
         final String groupId = rootNode.getElementsByTagName('groupId').item(0).firstChild.nodeValue
         final String artifactId = rootNode.getElementsByTagName('artifactId').item(0).firstChild.nodeValue
+
+        if (!groupId || !artifactId) {
+            log.warn("Maven response missing groupId or artifactId")
+            return Optional.empty()
+        }
+
         if (librariesFilters.isEmpty()) {
-            final String providedXmlLatestVersion = rootNode.getElementsByTagName('latest').item(0).firstChild.nodeValue
-            return Optional.ofNullable(new LibraryMetadata(groupId, artifactId, providedXmlLatestVersion))
+            final String providedXmlLatestVersion = rootNode.getElementsByTagName('latest')?.item(0)?.firstChild?.nodeValue
+
+            return Optional.ofNullable(providedXmlLatestVersion)
+                    .map { version -> new LibraryMetadata(groupId, artifactId, version) }
+                    .or(() -> calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId))
         } else {
             return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)
         }
     }
 
     private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(Document rootNode, String groupId, String artifactId) {
-        return rootNode.getElementsByTagName('version').stream()
-                .map { versionNode -> versionNode.firstChild.nodeValue as String }
-                .filter { version -> isVersionNotToFiltered(version, librariesFilters) }
-                .map { filteredVersion -> new LibraryMetadata(groupId, artifactId, filteredVersion) }
-                .max(Comparator.comparing({ libMetadata -> libMetadata.getDependencyVersion() }, versionComparator))
+        def versionNodes = rootNode.getElementsByTagName('version')
+        if (versionNodes == null || versionNodes.length == 0) {
+            log.warn("No <version> tags found for ${groupId}:${artifactId}")
+            return Optional.empty()
+        }
+
+        LibraryMetadata mostRecent = null
+        for (int i = 0; i < versionNodes.length; i++) {
+            String version = versionNodes.item(i)?.textContent
+            if (version && isVersionNotToFiltered(version, librariesFilters)) {
+                LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
+                if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {
+                    mostRecent = lib
+                }
+            }
+        }
+
+        return Optional.ofNullable(mostRecent)
     }
 }
