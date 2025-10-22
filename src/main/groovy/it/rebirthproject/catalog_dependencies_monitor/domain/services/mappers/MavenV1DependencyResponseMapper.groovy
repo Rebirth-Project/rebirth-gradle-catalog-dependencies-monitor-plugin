@@ -21,13 +21,13 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.D
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 
-class MavenDependencyResponseMapper implements RepositoryResponseMapper {
+class MavenV1DependencyResponseMapper implements RepositoryResponseMapper {
 
     private final VersionComparator versionComparator
     private final JsonSlurper jsonReader
     private final List<String> librariesFilters
 
-    MavenDependencyResponseMapper(VersionComparator versionComparator, JsonSlurper jsonReader, List<String> librariesFilters) {
+    MavenV1DependencyResponseMapper(VersionComparator versionComparator, JsonSlurper jsonReader, List<String> librariesFilters) {
         this.versionComparator = versionComparator
         this.jsonReader = jsonReader
         this.librariesFilters = librariesFilters

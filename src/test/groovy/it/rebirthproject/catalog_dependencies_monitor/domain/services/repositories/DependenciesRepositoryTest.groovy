@@ -23,7 +23,7 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.L
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.PluginMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpClient
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.GradlePortalsPluginsResponseMapper
-import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenDependencyResponseMapper
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV1DependencyResponseMapper
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV2DependencyResponseMapper
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import it.rebirthproject.versioncomparator.comparator.VersionComparatorBuilder
@@ -43,7 +43,7 @@ class DependenciesRepositoryTest {
     private static final DependencyMetadata FAKE_LIBRARY = new LibraryMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
     private static final DependencyMetadata FAKE_PLUGIN = new PluginMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
 
-    private static MavenRepository mavenRepository
+    private static MavenRepository mavenV1Repository
     private static MavenRepository mavenV2Repository
     private static DependenciesRepository gradleRepository
     private static VersionComparator versionComparator
@@ -53,10 +53,10 @@ class DependenciesRepositoryTest {
         versionComparator = new VersionComparatorBuilder().useMavenRulesVersionParser().build()
         final JsonSlurper jsonSlurper = new JsonSlurper()
         final HttpClient httpClient = new HttpClient()
-        final MavenDependencyResponseMapper mavenDependencyResponseMapper = new MavenDependencyResponseMapper(versionComparator, jsonSlurper, new ArrayList<>())
+        final MavenV1DependencyResponseMapper mavenV1DependencyResponseMapper = new MavenV1DependencyResponseMapper(versionComparator, jsonSlurper, new ArrayList<>())
         final MavenV2DependencyResponseMapper mavenV2DependencyResponseMapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())
         final GradlePortalsPluginsResponseMapper gradlePortalsPluginsResponseMapper = new GradlePortalsPluginsResponseMapper()
-        mavenRepository = new MavenV1Repository(httpClient, mavenDependencyResponseMapper)
+        mavenV1Repository = new MavenV1Repository(httpClient, mavenV1DependencyResponseMapper)
         mavenV2Repository = new MavenV2Repository(httpClient, mavenV2DependencyResponseMapper)
         gradleRepository = new GradlePortalRepository(httpClient, gradlePortalsPluginsResponseMapper)
     }
@@ -98,7 +98,7 @@ class DependenciesRepositoryTest {
 
     private static Stream<MavenRepository> getMavenRepositoryInstance() {
         Stream.of(
-                mavenRepository,
+                mavenV1Repository,
                 mavenV2Repository
         )
     }
