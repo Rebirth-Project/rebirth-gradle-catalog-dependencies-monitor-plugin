@@ -31,21 +31,13 @@ EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:
 class MavenV1Repository extends DependenciesRepository {
 
     private final short resultRows = 50
-    
-    //TODO sta roba va tolta con tutta la classe java, va usato DependenciesRepositoryType
-    private final MavenRepositoryVersion version = MavenRepositoryVersion.V1;
 
     private static final String REPOSITORY_BASE_URL = "https://search.maven.org";
 
     MavenV1Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
     }
-
-    //TODO va usato DependenciesRepositoryType ma forse non serve piu' il metodo visto che si deve usare il getType()
-    MavenRepositoryVersion getVersion() {
-        return version
-    }
-    
+       
     @Override
     DependenciesRepositoryType getType() {
         return DependenciesRepositoryType.MAVEN_CENTRAL_V1

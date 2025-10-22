@@ -41,7 +41,7 @@ class GradlePortalRepository extends DependenciesRepository {
         log.info(dependencyMetadata.dependencyId)
         final String pluginIdWithSlashes = dependencyMetadata.dependencyId.replaceAll("\\.", "/")
         final String pluginId = dependencyMetadata.dependencyId
-        final String urlGradlePortal = "https://plugins.gradle.org/m2/${pluginIdWithSlashes}/${pluginId}.gradle.plugin/maven-metadata.xml"
+        final String urlGradlePortal = "${DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL.apiUrl}/m2/${pluginIdWithSlashes}/${pluginId}.gradle.plugin/maven-metadata.xml"
         log.info("gradle portal => GET {}", urlGradlePortal)
         return getDependenciesFromRepository(urlGradlePortal)
     }

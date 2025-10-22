@@ -16,20 +16,35 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories
 
-enum DependenciesRepositoryType {
-    MAVEN_CENTRAL_V1("Maven Central", "Maven Central", "https://mvnrepository.com","https://search.maven.org"),
-    MAVEN_CENTRAL_V2("Maven Central Sonatype", "Maven Central Sonatype", "https://central.sonatype.com/","https://repo.maven.apache.org"),
-    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org","")
+import java.util.stream.Stream
 
+enum DependenciesRepositoryType {
+    //TODO cambiare le descrizioni per i report a modo rispetto al tipo di repository
+    MAVEN_CENTRAL_V1("Maven Central", "Maven Central", "https://mvnrepository.com","https://search.maven.org","Libraries Report", "libraries"),
+    MAVEN_CENTRAL_V2("Maven Central Sonatype", "Maven Central Sonatype", "https://central.sonatype.com/","https://repo.maven.apache.org","Libraries Report", "libraries"),
+    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org","https://plugins.gradle.org/","Plugins Report", "plugins")
+    
     final String title
     final String description
     final String website
     final String apiUrl
+    final String reportDescription
+    final String tomlDescription
 
-    DependenciesRepositoryType(String title, String description, String website, String apiUrl) {
+    DependenciesRepositoryType(String title, String description, String website, String apiUrl, String reportDescription, String tomlDescription) {
         this.title = title
         this.description = description
         this.website = website
         this.apiUrl = apiUrl
+        this.reportDescription = reportDescription
+        this.tomlDescription = tomlDescription
+    }
+        
+    public static DependenciesRepositoryType getMavenRepositoryTypeFromString(String mavenRepositoryType) {              
+        return Stream.of(values())
+        .filter(enumVersion -> enumVersion!= GRADLE_PLUGINS_PORTAL)
+        .filter(enumVersion -> enumVersion.name().equalsIgnoreCase(mavenRepositoryType))
+        .findFirst()
+        .orElse(MAVEN_CENTRAL_V2);
     }
 }

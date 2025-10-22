@@ -16,23 +16,37 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.services.factory
 
+import groovy.json.JsonSlurper
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReportType
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.GradlePortalsPluginsResponseMapper
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV1DependencyResponseMapper
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV2DependencyResponseMapper
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.GradlePortalRepository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenV1Repository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenV2Repository
+import it.rebirthproject.versioncomparator.comparator.VersionComparator
+import java.util.stream.Stream
 
 class DependenciesRepositoryFactory {
-
-    final DependenciesRepository mavenCentral
-    final DependenciesRepository gradlePortalsPlugin
-
-    DependenciesRepositoryFactory(DependenciesRepository mavenCentral, DependenciesRepository gradlePortalsPlugin) {
-        this.mavenCentral = mavenCentral
-        this.gradlePortalsPlugin = gradlePortalsPlugin
+    
+    private final VersionComparator versionComparator
+    private final JsonSlurper jsonReader
+    private final List<String> libVersionFilters
+       
+    DependenciesRepositoryFactory(VersionComparator versionComparator,JsonSlurper jsonReader,List<String> libVersionFilters) {
+        this.versionComparator = versionComparator
+        this.jsonReader = jsonReader
+        this.libVersionFilters = libVersionFilters
     }
-
-    DependenciesRepository create(DependenciesReportType reportType) {
+       
+    DependenciesRepository create(DependenciesRepositoryType reportType) {
         switch (reportType) {
-            case DependenciesReportType.LIBRARIES_REPORT: return mavenCentral
-            case DependenciesReportType.PLUGINS_REPORT: return gradlePortalsPlugin
+        case DependenciesRepositoryType.MAVEN_CENTRAL_V1: return new MavenV1Repository(httpClient, new MavenV1DependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))
+        case DependenciesRepositoryType.MAVEN_CENTRAL_V2: return new MavenV2Repository(httpClient, new MavenV2DependencyResponseMapper(versionComparator, libVersionFilters))
+        case DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL: return new GradlePortalRepository(httpClient, new GradlePortalsPluginsResponseMapper())
         }
-    }
+    }        
 }
+        

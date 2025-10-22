@@ -16,6 +16,7 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.data.reports
 
+@Deprecated
 enum DependenciesReportType {
     LIBRARIES_REPORT("Libraries Report", "libraries"),
     PLUGINS_REPORT("Plugins Report", "plugins")

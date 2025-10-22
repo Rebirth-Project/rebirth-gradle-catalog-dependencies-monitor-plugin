@@ -20,6 +20,7 @@ import groovy.util.logging.Slf4j
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReport
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.factory.DependenciesRepositoryFactory
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepository
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
 
 @Slf4j
 class HtmlReportGenerator {
@@ -122,9 +123,9 @@ class HtmlReportGenerator {
                 """.formatted(title, title)
 
                 report.reports.eachWithIndex { depReport, depReportIndex ->
-                    {
-                        final DependenciesRepository repository = dependenciesRepositoryFactory.create(dependenciesReport.reportType)
-                        final String dependencyUrlInRepo = repository.getHttpUrlOfDependencyInRepository(depReport?.repositoryType?.website, depReport?.dependencyInRepo)
+                    {                        
+                        final DependenciesRepository repository = dependenciesRepositoryFactory.create(dependenciesReport.dependenciesRepositoryType)
+                        final String dependencyUrlInRepo = repository.getHttpUrlOfDependencyInRepository(depReport?.repositoryType?.website, depReport?.dependencyInRepo)                        
                         final String catalogDependencyIdAndVersion = concatDependencyIdAndVersion(depReport?.dependencyInCatalog?.dependencyId, depReport?.dependencyInCatalog?.dependencyVersion)
                         log.debug("catalogDependencyIdAndVersion: {}", catalogDependencyIdAndVersion)
                         final String repositoryDependencyIdAndVersion = concatDependencyIdAndVersion(depReport?.dependencyInRepo?.dependencyId, depReport?.dependencyInRepo?.dependencyVersion)

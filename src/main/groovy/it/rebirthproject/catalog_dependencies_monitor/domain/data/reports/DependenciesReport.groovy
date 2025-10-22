@@ -16,6 +16,8 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.data.reports
 
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
+
 class DependenciesReport {
     final DependencyReportList updated = new DependencyReportList("updated", "Updated Dependencies")
     final DependencyReportList outdated = new DependencyReportList("outdated", "Outdated Dependencies")
@@ -24,10 +26,10 @@ class DependenciesReport {
     final DependencyReportList excluded = new DependencyReportList("excluded", "Excluded Dependencies")
     final DependencyReportList skipped = new DependencyReportList("skipped", "Skipped Dependencies")
     final List<DependencyReportList> reports = [outdated, exceeding, updated, notFound, excluded, skipped]
-    final DependenciesReportType reportType
+    final DependenciesRepositoryType dependenciesRepositoryType
     String dateAndTime
 
-    DependenciesReport(DependenciesReportType reportType) {
-        this.reportType = reportType
+    DependenciesReport(DependenciesRepositoryType dependenciesRepositoryType) {
+        this.dependenciesRepositoryType = dependenciesRepositoryType
     }
 }

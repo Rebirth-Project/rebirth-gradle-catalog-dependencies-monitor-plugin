@@ -38,7 +38,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         println "The plugin ${PLUGIN_NAME} v${readPluginVersionFromJar(project.getLogger())} has been applied to the project ${project.name}"
 
         final CatalogMonitorExtension catalogMonitorExtension = project.extensions.create("catalogDependenciesMonitor", CatalogMonitorExtension)
-        catalogMonitorExtension.mavenRepositoryVersion.convention(DEFAULT_MAVEN_CENTRAL_REPOSITORY_STRING_VERSION)
+        catalogMonitorExtension.mavenRepositoryType.convention(DEFAULT_MAVEN_CENTRAL_REPOSITORY_STRING_VERSION)
         catalogMonitorExtension.excludedLibraries.convention([])
         catalogMonitorExtension.excludedPlugins.convention([])
         catalogMonitorExtension.libraryVersionFilters.convention([])
@@ -47,7 +47,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.fileJsonReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.json"))
 
         project.gradle.sharedServices.registerIfAbsent("catalogMonitorContext", CatalogMonitorContext.class, spec -> {
-            spec.parameters.mavenRepositoryVersion.convention(catalogMonitorExtension.mavenRepositoryVersion)
+            spec.parameters.mavenRepositoryType.convention(catalogMonitorExtension.mavenRepositoryType)
             spec.parameters.libraryVersionFilters.convention(catalogMonitorExtension.libraryVersionFilters)
             spec.maxParallelUsages.set(1)
         })
