@@ -22,10 +22,10 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpC
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.RepositoryResponseMapper
 
 /**
-API Maven V1 (libraries)
+ API Maven V1 (libraries)
 
-EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=json
-EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
+ EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=json
+ EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
  */
 @Slf4j
 class MavenV1Repository extends DependenciesRepository {
@@ -35,7 +35,7 @@ class MavenV1Repository extends DependenciesRepository {
     MavenV1Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
     }
-       
+
     @Override
     DependenciesRepositoryType getType() {
         return DependenciesRepositoryType.MAVEN_CENTRAL_V1
@@ -47,7 +47,7 @@ class MavenV1Repository extends DependenciesRepository {
         final String libraryGroup = splitLibraryGroupAndArtifact[0]
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
         final String urlMavenCentral = "${DependenciesRepositoryType.MAVEN_CENTRAL_V1.apiUrl}/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
-        log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
+        log.info("maven {} => GET {}", DependenciesRepositoryType.MAVEN_CENTRAL_V1.getDescription(), urlMavenCentral)
         return getDependenciesFromRepository(urlMavenCentral)
     }
 }

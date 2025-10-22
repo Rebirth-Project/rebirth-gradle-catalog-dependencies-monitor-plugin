@@ -50,7 +50,7 @@ class MavenV2Repository extends DependenciesRepository {
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
 
         final String urlMavenCentral = "${DependenciesRepositoryType.MAVEN_CENTRAL_V2.apiUrl}/maven2/${libraryGroupWithSlashSeparators}/${libraryArtifact}/maven-metadata.xml"
-        log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
+        log.info("maven {} => GET {}", DependenciesRepositoryType.MAVEN_CENTRAL_V2.getDescription(), urlMavenCentral)
 
         return getDependenciesFromRepository(urlMavenCentral)
     }
