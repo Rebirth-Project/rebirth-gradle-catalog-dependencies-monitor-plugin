@@ -33,8 +33,6 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Re
 @Slf4j
 class MavenV2Repository extends DependenciesRepository {
 
-    private static final String REPOSITORY_BASE_URL = "https://repo.maven.apache.org"
-
     MavenV2Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
     }
@@ -51,7 +49,7 @@ class MavenV2Repository extends DependenciesRepository {
         final String libraryGroupWithSlashSeparators = libraryGroup.replaceAll("\\.", "\\/")
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
 
-        final String urlMavenCentral = "${REPOSITORY_BASE_URL}/maven2/${libraryGroupWithSlashSeparators}/${libraryArtifact}/maven-metadata.xml"
+        final String urlMavenCentral = "${DependenciesRepositoryType.MAVEN_CENTRAL_V2.apiUrl}/maven2/${libraryGroupWithSlashSeparators}/${libraryArtifact}/maven-metadata.xml"
         log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
 
         return getDependenciesFromRepository(urlMavenCentral)

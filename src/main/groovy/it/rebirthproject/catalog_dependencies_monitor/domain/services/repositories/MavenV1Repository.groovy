@@ -32,8 +32,6 @@ class MavenV1Repository extends DependenciesRepository {
 
     private final short resultRows = 50
 
-    private static final String REPOSITORY_BASE_URL = "https://search.maven.org";
-
     MavenV1Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
     }
@@ -48,7 +46,7 @@ class MavenV1Repository extends DependenciesRepository {
         final String[] splitLibraryGroupAndArtifact = dependencyMetadata.dependencyId.split(":")
         final String libraryGroup = splitLibraryGroupAndArtifact[0]
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
-        final String urlMavenCentral = "${REPOSITORY_BASE_URL}/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
+        final String urlMavenCentral = "${DependenciesRepositoryType.MAVEN_CENTRAL_V1.apiUrl}/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
         log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
         return getDependenciesFromRepository(urlMavenCentral)
     }
