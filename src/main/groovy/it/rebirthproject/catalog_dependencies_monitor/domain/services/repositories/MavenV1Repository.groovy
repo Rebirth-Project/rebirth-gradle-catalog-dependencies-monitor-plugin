@@ -28,6 +28,8 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Re
  EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
  */
 @Slf4j
+@Deprecated
+// The MAVEN_CENTRAL_V1 is deprecated and will be removed in future versions
 class MavenV1Repository extends DependenciesRepository {
 
     private final short resultRows = 50

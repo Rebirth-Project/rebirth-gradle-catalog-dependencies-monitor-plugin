@@ -42,6 +42,9 @@ The report is divided in two parts: the libraries' report and the plugins' repor
 catalogDependenciesMonitor {
     // use the name of the catalog to monitor. "libs" in this case
     versionCatalog = project.extensions.getByType(VersionCatalogsExtension).named("libs") 
+    // (optional) If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
+    // The MAVEN_CENTRAL_V1 is deprecated and will be removed in future versions
+    mavenRepositoryType = "MAVEN_CENTRAL_V2"
     // (optional) exclude libraries by group:artifact
     excludedLibraries = ["net.researchgate:gradle-release", "org.hidetake:core"]          
     // (optional) exclude plugins by pluginId

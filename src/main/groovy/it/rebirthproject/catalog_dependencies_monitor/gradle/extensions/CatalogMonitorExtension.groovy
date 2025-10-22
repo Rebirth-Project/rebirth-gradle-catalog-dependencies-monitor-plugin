@@ -23,8 +23,9 @@ import org.gradle.api.provider.Property
 
 interface CatalogMonitorExtension {
     Property<VersionCatalog> getVersionCatalog()
-   
+
     // If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
+    // The MAVEN_CENTRAL_V1 is deprecated and will be removed in future versions
     Property<String> getMavenRepositoryType()
 
     // NOTE: To exclude a library add the group and artifact separated by a semicolon (net.researchgate:gradle-release)
