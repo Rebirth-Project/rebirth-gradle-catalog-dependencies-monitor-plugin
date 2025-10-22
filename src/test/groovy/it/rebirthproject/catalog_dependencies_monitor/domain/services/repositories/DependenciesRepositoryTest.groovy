@@ -43,8 +43,8 @@ class DependenciesRepositoryTest {
     private static final DependencyMetadata FAKE_LIBRARY = new LibraryMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
     private static final DependencyMetadata FAKE_PLUGIN = new PluginMetadata("@@@@xyzFaKePlUgIn!1!1!1!@@@@", "0.0.0")
 
-    private static MavenRepository mavenV1Repository
-    private static MavenRepository mavenV2Repository
+    private static DependenciesRepository mavenV1Repository
+    private static DependenciesRepository mavenV2Repository
     private static DependenciesRepository gradleRepository
     private static VersionComparator versionComparator
 
@@ -63,7 +63,7 @@ class DependenciesRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("getMavenRepositoryInstance")
-    void testMavenRepositoryFindExistingLibrary(MavenRepository mavenRepositoryInstance) {
+    void testMavenRepositoryFindExistingLibrary(DependenciesRepository mavenRepositoryInstance) {
         Optional<DependencyMetadata> response = mavenRepositoryInstance.getDependencies(EXISTING_LIBRARY)
 
         assertTrue(response.isPresent())
@@ -96,7 +96,7 @@ class DependenciesRepositoryTest {
         assertFalse(response.isPresent())
     }
 
-    private static Stream<MavenRepository> getMavenRepositoryInstance() {
+    private static Stream<DependenciesRepository> getMavenRepositoryInstance() {
         Stream.of(
                 mavenV1Repository,
                 mavenV2Repository

@@ -40,7 +40,7 @@ enum DependenciesRepositoryType {
         this.tomlDescription = tomlDescription
     }
         
-    public static DependenciesRepositoryType getMavenRepositoryTypeFromString(String mavenRepositoryType) {              
+    static DependenciesRepositoryType getMavenRepositoryTypeFromString(String mavenRepositoryType) {
         return Stream.of(values())
         .filter(enumVersion -> enumVersion!= GRADLE_PLUGINS_PORTAL)
         .filter(enumVersion -> enumVersion.name().equalsIgnoreCase(mavenRepositoryType))

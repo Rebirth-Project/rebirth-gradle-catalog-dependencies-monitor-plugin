@@ -24,6 +24,7 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.P
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.reports.DependenciesReport
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.context.CatalogMonitorContext
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.report.DependenciesReportCalculator
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepositoryType
 import org.gradle.api.DefaultTask
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.provider.ListProperty
@@ -55,7 +56,7 @@ abstract class CalculateDependenciesUpdatesTask extends DefaultTask {
         final VersionCatalog versionCatalog = versionCatalog.get()
         final List<String> excludedLibraries = excludedLibraries.get()
         final List<String> excludedPlugins = excludedPlugins.get()
-        final String mavenRepositoryType = catalogMonitorContext.get().mavenRepositorytype
+        final DependenciesRepositoryType mavenRepositoryType = catalogMonitorContext.get().mavenRepositoryType
         final List<String> libraryVersionFilters = catalogMonitorContext.get().libraryVersionFilters
         final CatalogMonitorContext context = catalogMonitorContext.get()
         final DependenciesReport librariesReport = context.librariesReport

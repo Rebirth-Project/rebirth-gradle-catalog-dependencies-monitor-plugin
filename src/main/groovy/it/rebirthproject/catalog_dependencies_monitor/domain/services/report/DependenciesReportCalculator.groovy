@@ -40,7 +40,7 @@ class DependenciesReportCalculator {
         final DependencyReport reportElement = new DependencyReport()
         reportElement.dependencyInCatalog = catalogDependency
 
-        final DependenciesRepository dependenciesRepository = dependenciesRepositoryFactory.create(report.reportType)
+        final DependenciesRepository dependenciesRepository = dependenciesRepositoryFactory.create(report.dependenciesRepositoryType)
         reportElement.repositoryType = dependenciesRepository.getType()
 
         if (catalogDependency.dependencyId == null) {
