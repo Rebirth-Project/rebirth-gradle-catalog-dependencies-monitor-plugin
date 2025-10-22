@@ -57,7 +57,7 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
         }
 
         if (librariesFilters.isEmpty()) {
-            final String providedXmlLatestVersion = rootNode.getElementsByTagName('latest')?.item(0)?.firstChild?.nodeValue
+            final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
 
             return Optional.ofNullable(providedXmlLatestVersion)
                     .map { version -> new LibraryMetadata(groupId, artifactId, version) }
