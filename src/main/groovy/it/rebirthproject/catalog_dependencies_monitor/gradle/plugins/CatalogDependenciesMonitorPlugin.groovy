@@ -69,7 +69,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
 
-        def taskGenerateReport = project.tasks.register("GenerateReport", GenerateReportTask) {
+        def taskGenerateReport = project.tasks.register("generateReport", GenerateReportTask) {
             description = "Generates a report on the dependency update status in the catalog"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskCalculateDependenciesUpdates, taskGenerateCss)
@@ -84,7 +84,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
         }
 
-        project.tasks.register("UpdateDependenciesInTomlCatalog", UpdateCatalogTask) {
+        project.tasks.register("updateDependenciesInTomlCatalog", UpdateCatalogTask) {
             description = "Updates automatically the dependencies in the catalog toml file"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskGenerateReport)
