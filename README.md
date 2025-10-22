@@ -3,7 +3,7 @@
 Gradle plugin for monitoring Gradle catalog dependencies. It generates reports to inform you about which dependencies in
 your catalog are up-to-date or need updating.
 
-**```Latest Version 1.0.0```**
+**```Latest Version 1.0.66```**
 
 ![Build Status](https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin/actions/workflows/build.yml/badge.svg?raw=true)
 
