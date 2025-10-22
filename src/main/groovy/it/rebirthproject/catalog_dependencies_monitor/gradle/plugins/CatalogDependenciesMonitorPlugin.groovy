@@ -47,6 +47,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.fileJsonReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.json"))
 
         project.gradle.sharedServices.registerIfAbsent("catalogMonitorContext", CatalogMonitorContext.class, spec -> {
+            spec.parameters.mavenRepositoryVersion.convention(catalogMonitorExtension.mavenRepositoryVersion)
             spec.parameters.libraryVersionFilters.convention(catalogMonitorExtension.libraryVersionFilters)
             spec.maxParallelUsages.set(1)
         })
@@ -61,6 +62,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             description = "Calculate a report on the dependency update status in the rebirth-catalog"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
+            mavenRepositoryVersion.convention(catalogMonitorExtension.mavenRepositoryVersion)
             excludedLibraries.convention(catalogMonitorExtension.excludedLibraries)
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
