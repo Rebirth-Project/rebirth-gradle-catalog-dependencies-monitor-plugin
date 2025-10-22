@@ -22,7 +22,7 @@ enum DependenciesRepositoryType {
     //TODO cambiare le descrizioni per i report a modo rispetto al tipo di repository
     MAVEN_CENTRAL_V1("Maven Central", "Maven Central", "https://mvnrepository.com","https://search.maven.org","Libraries Report", "libraries"),
     MAVEN_CENTRAL_V2("Maven Central Sonatype", "Maven Central Sonatype", "https://central.sonatype.com/","https://repo.maven.apache.org","Libraries Report", "libraries"),
-    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org","https://plugins.gradle.org/","Plugins Report", "plugins")
+    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org","https://plugins.gradle.org","Plugins Report", "plugins")
     
     final String title
     final String description
