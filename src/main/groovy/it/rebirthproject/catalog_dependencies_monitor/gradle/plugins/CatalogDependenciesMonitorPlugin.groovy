@@ -21,17 +21,12 @@ import it.rebirthproject.catalog_dependencies_monitor.gradle.extensions.CatalogM
 import it.rebirthproject.catalog_dependencies_monitor.gradle.tasks.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+
 import java.util.jar.JarFile
 
-class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
+import static it.rebirthproject.catalog_dependencies_monitor.domain.constants.Constants.*
 
-    private static final String PLUGIN_NAME = CatalogDependenciesMonitorPlugin.class.getSimpleName()
-    private static final String PLUGIN_TASKS_GROUP = "catalog-monitor"
-    private static final String MIN_GRADLE_VERSION = "7.0"
-    private static final String DEFAULT_REPORT_FOLDER = "catalog-dependencies-monitor"
-    private static final String DEFAULT_REPORT_FILE_NAME = "catalog_report"
-    private static final String DEFAULT_CATALOG_TOML_FOLDER = "gradle"
-    private static final String DEFAULT_CATALOG_TOML_FILE = "libs.versions.toml"
+class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
@@ -42,7 +37,8 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
 
         println "The plugin ${PLUGIN_NAME} v${readPluginVersionFromJar(project.getLogger())} has been applied to the project ${project.name}"
 
-        final def catalogMonitorExtension = project.extensions.create("catalogDependenciesMonitor", CatalogMonitorExtension)
+        final CatalogMonitorExtension catalogMonitorExtension = project.extensions.create("catalogDependenciesMonitor", CatalogMonitorExtension)
+        catalogMonitorExtension.mavenRepositoryVersion.convention(DEFAULT_MAVEN_CENTRAL_REPOSITORY_STRING_VERSION)
         catalogMonitorExtension.excludedLibraries.convention([])
         catalogMonitorExtension.excludedPlugins.convention([])
         catalogMonitorExtension.libraryVersionFilters.convention([])
@@ -51,9 +47,9 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.fileJsonReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.json"))
 
         project.gradle.sharedServices.registerIfAbsent("catalogMonitorContext", CatalogMonitorContext.class, spec -> {
-                spec.parameters.libraryVersionFilters.convention(catalogMonitorExtension.libraryVersionFilters)
-                spec.maxParallelUsages.set(1)
-            })
+            spec.parameters.libraryVersionFilters.convention(catalogMonitorExtension.libraryVersionFilters)
+            spec.maxParallelUsages.set(1)
+        })
 
         final def taskGenerateCss = project.tasks.register("_taskGenerateCss", GenerateCssTask) {
             description = "Copy the CSS to the build/report/css folder"
@@ -65,6 +61,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             description = "Calculate a report on the dependency update status in the rebirth-catalog"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
+            mavenRepositoryVersion.convention(catalogMonitorExtension.mavenRepositoryVersion)
             excludedLibraries.convention(catalogMonitorExtension.excludedLibraries)
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
@@ -92,7 +89,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             fileJsonReport.convention(catalogMonitorExtension.fileJsonReport)
         }
     }
-    
+
     String readPluginVersionFromJar(logger) {
         def codeSource = this.getClass().protectionDomain?.codeSource
         if (codeSource) {

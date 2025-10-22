@@ -31,6 +31,7 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Re
 class MavenV1Repository extends MavenRepository {
 
     private final short resultRows = 50
+    private final MavenRepositoryVersion version = MavenRepositoryVersion.V1;
 
     private static final String REPOSITORY_BASE_URL = "https://search.maven.org";
 
@@ -39,12 +40,17 @@ class MavenV1Repository extends MavenRepository {
     }
 
     @Override
+    MavenRepositoryVersion getVersion() {
+        return version
+    }
+
+    @Override
     Optional<DependencyMetadata> getDependencies(DependencyMetadata dependencyMetadata) {
         final String[] splitLibraryGroupAndArtifact = dependencyMetadata.dependencyId.split(":")
         final String libraryGroup = splitLibraryGroupAndArtifact[0]
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
         final String urlMavenCentral = "${REPOSITORY_BASE_URL}/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
-        log.info("maven => GET {}", urlMavenCentral)
+        log.info("maven {} => GET {}", version, urlMavenCentral)
         return getDependenciesFromRepository(urlMavenCentral)
     }
 }

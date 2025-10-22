@@ -40,6 +40,8 @@ abstract class MavenRepository extends DependenciesRepository {
         return DependenciesRepositoryType.MAVEN_CENTRAL
     }
 
+    abstract MavenRepositoryVersion getVersion()
+
     @Override
     // TODO: code very similar to the one in the GradlePortalRepository... Duplication can probably be removed with refactoring... (Maybe uplift it to DependenciesRepository?)
     String getHttpUrlOfDependencyInRepository(String repositoryBaseUrl, DependencyMetadata dependencyMetadata) {

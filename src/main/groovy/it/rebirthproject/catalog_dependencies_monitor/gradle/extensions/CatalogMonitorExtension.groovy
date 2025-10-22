@@ -24,6 +24,10 @@ import org.gradle.api.provider.Property
 interface CatalogMonitorExtension {
     Property<VersionCatalog> getVersionCatalog()
 
+    // NOTE: It is possible to specify the Maven repository version. The recognized (case insensitive) values are [v1, version1, v2, version2].
+    // If nothing is specified here the Maven v2 repository will be used as default
+    Property<String> getMavenRepositoryVersion()
+
     // NOTE: To exclude a library add the group and artifact separated by a semicolon (net.researchgate:gradle-release)
     ListProperty<String> getExcludedLibraries()
 

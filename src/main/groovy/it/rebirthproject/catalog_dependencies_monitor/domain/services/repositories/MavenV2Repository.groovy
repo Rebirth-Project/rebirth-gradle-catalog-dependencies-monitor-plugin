@@ -35,8 +35,15 @@ class MavenV2Repository extends MavenRepository {
 
     private static final String REPOSITORY_BASE_URL = "https://repo.maven.apache.org"
 
+    private final MavenRepositoryVersion version = MavenRepositoryVersion.V2
+
     MavenV2Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
+    }
+
+    @Override
+    MavenRepositoryVersion getVersion() {
+        return version
     }
 
     @Override
@@ -47,7 +54,7 @@ class MavenV2Repository extends MavenRepository {
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
 
         final String urlMavenCentral = "${REPOSITORY_BASE_URL}/maven2/${libraryGroupWithSlashSeparators}/${libraryArtifact}/maven-metadata.xml"
-        log.info("maven2 => GET {}", urlMavenCentral)
+        log.info("maven {} => GET {}", version, urlMavenCentral)
 
         return getDependenciesFromRepository(urlMavenCentral)
     }
