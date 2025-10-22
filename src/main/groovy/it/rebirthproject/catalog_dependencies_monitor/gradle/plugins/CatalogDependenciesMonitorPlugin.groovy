@@ -26,7 +26,7 @@ import java.util.jar.JarFile
 class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
 
     private static final String PLUGIN_NAME = CatalogDependenciesMonitorPlugin.class.getSimpleName()
-    private static final String PLUGIN_TASKS_GROUP = "catalog"
+    private static final String PLUGIN_TASKS_GROUP = "catalog-monitor"
     private static final String MIN_GRADLE_VERSION = "7.0"
     private static final String DEFAULT_REPORT_FOLDER = "catalog-dependencies-monitor"
     private static final String DEFAULT_REPORT_FILE_NAME = "catalog_report"
@@ -55,13 +55,13 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
                 spec.maxParallelUsages.set(1)
             })
 
-        final def taskGenerateCss = project.tasks.register("taskGenerateCss", GenerateCssTask) {
+        final def taskGenerateCss = project.tasks.register("_taskGenerateCss", GenerateCssTask) {
             description = "Copy the CSS to the build/report/css folder"
             group = PLUGIN_TASKS_GROUP
             outputs.file(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/css/styles.css"))
         }
 
-        final def taskCalculateDependenciesUpdates = project.tasks.register("calculateDependenciesUpdates", CalculateDependenciesUpdatesTask) {
+        final def taskCalculateDependenciesUpdates = project.tasks.register("_calculateDependenciesUpdates", CalculateDependenciesUpdatesTask) {
             description = "Calculate a report on the dependency update status in the rebirth-catalog"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
@@ -69,7 +69,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
 
-        def taskGenerateReport = project.tasks.register("generateReport", GenerateReportTask) {
+        def taskGenerateReport = project.tasks.register("GenerateReport", GenerateReportTask) {
             description = "Generates a report on the dependency update status in the catalog"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskCalculateDependenciesUpdates, taskGenerateCss)
@@ -78,13 +78,13 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             outputs.upToDateWhen { false }
         }
 
-        project.tasks.register("printCatalogContent", PrintCatalogContentTask) {
+        project.tasks.register("_printCatalogContent", PrintCatalogContentTask) {
             description = "Print the catalog content"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
         }
 
-        project.tasks.register("updateDependenciesInTomlCatalog", UpdateCatalogTask) {
+        project.tasks.register("UpdateDependenciesInTomlCatalog", UpdateCatalogTask) {
             description = "Updates automatically the dependencies in the catalog toml file"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskGenerateReport)
