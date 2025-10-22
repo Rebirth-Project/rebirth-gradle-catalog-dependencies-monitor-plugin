@@ -62,7 +62,6 @@ abstract class CatalogMonitorContext implements BuildService<Params>, AutoClosea
         this.librariesReport = new DependenciesReport(mavenRepositoryType)
         this.pluginsReport = new DependenciesReport(DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)
 
-        // TODO vediamo il version comparator?
         this.reportCalculator = new DependenciesReportCalculator(versionComparator, dependenciesRepositoryFactory)
         this.htmlReport = new HtmlReportGenerator(dependenciesRepositoryFactory)
         this.catalogUpdateService = new CatalogUpdateService(jsonReader, tomlReader)
