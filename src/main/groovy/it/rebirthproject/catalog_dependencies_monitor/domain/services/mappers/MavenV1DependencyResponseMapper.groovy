@@ -40,10 +40,22 @@ class MavenV1DependencyResponseMapper implements RepositoryResponseMapper {
     }
 
     private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(List<?> docs) {
+        DependencyMetadata latestVersionMavenDependency = null
         docs.stream()
                 .filter { doc -> doc != null && doc.v != null }
                 .filter { doc -> isVersionNotToFiltered(doc.v as String, librariesFilters) }
-                .map { doc -> new LibraryMetadata(doc.g, doc.a, doc.v) }
-                .max(Comparator.comparing({ libMetadata -> libMetadata.getDependencyVersion() }, versionComparator))
+                .forEach { doc ->
+                    DependencyMetadata mavenDependency = new LibraryMetadata(doc.g, doc.a, doc.v)
+                    if (latestVersionMavenDependency == null || isDependencyVersionMoreRecentThan(mavenDependency, latestVersionMavenDependency)) {
+                        latestVersionMavenDependency = mavenDependency
+                    }
+                }
+        return Optional.ofNullable(latestVersionMavenDependency)
+    }
+
+    private boolean isDependencyVersionMoreRecentThan(DependencyMetadata mavenDependency1, DependencyMetadata mavenDependency2) {
+        final String v1 = mavenDependency1.getDependencyVersion()
+        final String v2 = mavenDependency2.getDependencyVersion()
+        return versionComparator.compare(v1, v2) > 0
     }
 }
