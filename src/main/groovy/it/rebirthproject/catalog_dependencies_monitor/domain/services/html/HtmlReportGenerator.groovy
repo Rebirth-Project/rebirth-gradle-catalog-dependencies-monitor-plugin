@@ -57,7 +57,7 @@ class HtmlReportGenerator {
             <br/>
             <br/>
         """
-        htmlContent += "<h1>${librariesReport?.reportType?.description}</h1>"
+        htmlContent += "<h1>${librariesReport?.dependenciesRepositoryType?.description}</h1>"
         htmlContent += "<p>last update: ${librariesReport?.dateAndTime}</p>"
         htmlContent += getHtmlDependencyTable("Libraries", librariesReport)
 
@@ -67,7 +67,7 @@ class HtmlReportGenerator {
             <br/>
             <br/>
         """
-        htmlContent += "<h1>${pluginsReport?.reportType?.description}</h1>"
+        htmlContent += "<h1>${pluginsReport?.dependenciesRepositoryType?.description}</h1>"
         htmlContent += "<p>last update: ${pluginsReport?.dateAndTime}</p>"
         htmlContent += getHtmlDependencyTable("Plugins", pluginsReport)
         htmlContent += getFooter()
@@ -89,7 +89,7 @@ class HtmlReportGenerator {
                 log.debug("{} {} {} {}", reportIndex, report?.name, report?.description, report?.count)
                 final Integer reportElements = report?.count
                 final Boolean emptyReport = (reportElements == 0)
-                final String tabId = "${dependenciesReport?.reportType?.name()}_${reportIndex}"
+                final String tabId = "${dependenciesReport?.dependenciesRepositoryType?.name()}_${reportIndex}"
                 final String accordionLabel = report?.description?.replaceAll("Dependencies", title)
                 final String accordionChecked = (emptyReport) ? "" : "checked"
 
