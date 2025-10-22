@@ -19,6 +19,7 @@ package it.rebirthproject.catalog_dependencies_monitor.domain.services.repositor
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@Deprecated
 public enum MavenRepositoryVersion {
 
     V1("version1"),

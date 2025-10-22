@@ -21,17 +21,18 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.constants.Constants
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpClient
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV1DependencyResponseMapper
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.MavenV2DependencyResponseMapper
-import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenRepository
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenRepositoryVersion
+import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.DependenciesRepository
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenV1Repository
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories.MavenV2Repository
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 
+@Deprecated
 class MavenRepositoryFactory {
 
     private MavenRepositoryFactory() {}
 
-    static MavenRepository create(
+    static DependenciesRepository create(
             String requestedVersion,
             HttpClient httpClient,
             VersionComparator versionComparator,

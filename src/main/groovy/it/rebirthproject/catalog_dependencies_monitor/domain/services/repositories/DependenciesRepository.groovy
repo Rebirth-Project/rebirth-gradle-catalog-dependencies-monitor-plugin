@@ -18,6 +18,8 @@ package it.rebirthproject.catalog_dependencies_monitor.domain.services.repositor
 
 import groovy.util.logging.Slf4j
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.DependencyMetadata
+import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
+import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.PluginMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpClient
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.RepositoryResponseMapper
 
@@ -36,8 +38,6 @@ abstract class DependenciesRepository {
 
     abstract DependenciesRepositoryType getType()
 
-    abstract getHttpUrlOfDependencyInRepository(String repositoryBaseUrl, DependencyMetadata dependencyMetadata)
-
     Optional<DependencyMetadata> getDependenciesFromRepository(String urlRepository) {
         final Optional<String> optionalResponse = httpClient.get(urlRepository)
         if (optionalResponse.isPresent()) {
@@ -46,6 +46,18 @@ abstract class DependenciesRepository {
             return repositoryResponseMapper.map(response)
         } else {
             return Optional.empty()
+        }
+    }    
+    
+    String getHttpUrlOfDependencyInRepository(String repositoryBaseUrl, DependencyMetadata dependencyMetadata) {
+        if (dependencyMetadata instanceof PluginMetadata) {
+            def plugin = (PluginMetadata) dependencyMetadata
+            return "${repositoryBaseUrl}/plugin/${plugin.id}"
+        } else if (dependencyMetadata instanceof LibraryMetadata) {
+            def library = (LibraryMetadata) dependencyMetadata
+            return "${repositoryBaseUrl}/artifact/${library.group}/${library.artifact}"
+        } else {
+            return repositoryBaseUrl
         }
     }
 }

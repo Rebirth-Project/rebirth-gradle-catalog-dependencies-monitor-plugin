@@ -22,15 +22,17 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.http.HttpC
 import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.RepositoryResponseMapper
 
 /**
- API Maven V1 (libraries)
+API Maven V1 (libraries)
 
- EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=json
- EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
+EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=json
+EXAMPLE: https://search.maven.org/solrsearch/select?q=g:it.rebirthproject+AND+a:ufo-event-bus&core=gav&rows=10&wt=xml
  */
 @Slf4j
-class MavenV1Repository extends MavenRepository {
+class MavenV1Repository extends DependenciesRepository {
 
     private final short resultRows = 50
+    
+    //TODO sta roba va tolta con tutta la classe java, va usato DependenciesRepositoryType
     private final MavenRepositoryVersion version = MavenRepositoryVersion.V1;
 
     private static final String REPOSITORY_BASE_URL = "https://search.maven.org";
@@ -39,9 +41,14 @@ class MavenV1Repository extends MavenRepository {
         super(httpClient, mavenRepositoryResponseMapper)
     }
 
-    @Override
+    //TODO va usato DependenciesRepositoryType ma forse non serve piu' il metodo visto che si deve usare il getType()
     MavenRepositoryVersion getVersion() {
         return version
+    }
+    
+    @Override
+    DependenciesRepositoryType getType() {
+        return DependenciesRepositoryType.MAVEN_CENTRAL_V1
     }
 
     @Override
@@ -50,7 +57,7 @@ class MavenV1Repository extends MavenRepository {
         final String libraryGroup = splitLibraryGroupAndArtifact[0]
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
         final String urlMavenCentral = "${REPOSITORY_BASE_URL}/solrsearch/select?q=g:${libraryGroup}+AND+a:${libraryArtifact}&core=gav&rows=${resultRows}&wt=json"
-        log.info("maven {} => GET {}", version, urlMavenCentral)
+        log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
         return getDependenciesFromRepository(urlMavenCentral)
     }
 }

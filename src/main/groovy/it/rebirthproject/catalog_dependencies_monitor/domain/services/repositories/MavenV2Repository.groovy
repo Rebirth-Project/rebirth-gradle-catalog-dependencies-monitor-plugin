@@ -31,19 +31,25 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Re
 
  */
 @Slf4j
-class MavenV2Repository extends MavenRepository {
+class MavenV2Repository extends DependenciesRepository {
 
     private static final String REPOSITORY_BASE_URL = "https://repo.maven.apache.org"
 
+    //TODO sta roba va tolta con tutta la classe java e va usata DependenciesRepositoryType 
     private final MavenRepositoryVersion version = MavenRepositoryVersion.V2
 
     MavenV2Repository(HttpClient httpClient, RepositoryResponseMapper mavenRepositoryResponseMapper) {
         super(httpClient, mavenRepositoryResponseMapper)
     }
 
-    @Override
+    //TODO va usato DependenciesRepositoryType ma forse non serve piu' il metodo visto che si deve usare il getType()   
     MavenRepositoryVersion getVersion() {
         return version
+    }
+    
+    @Override
+    DependenciesRepositoryType getType() {
+        return DependenciesRepositoryType.MAVEN_CENTRAL_V2
     }
 
     @Override
@@ -54,7 +60,7 @@ class MavenV2Repository extends MavenRepository {
         final String libraryArtifact = splitLibraryGroupAndArtifact[1]
 
         final String urlMavenCentral = "${REPOSITORY_BASE_URL}/maven2/${libraryGroupWithSlashSeparators}/${libraryArtifact}/maven-metadata.xml"
-        log.info("maven {} => GET {}", version, urlMavenCentral)
+        log.info("maven {} => GET {}", DependenciesRepositoryType.getDescription(), urlMavenCentral)
 
         return getDependenciesFromRepository(urlMavenCentral)
     }

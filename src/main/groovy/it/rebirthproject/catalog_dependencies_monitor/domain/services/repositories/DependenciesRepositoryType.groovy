@@ -17,16 +17,19 @@
 package it.rebirthproject.catalog_dependencies_monitor.domain.services.repositories
 
 enum DependenciesRepositoryType {
-    MAVEN_CENTRAL("Maven", "Maven Central", "https://mvnrepository.com"),
-    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org")
+    MAVEN_CENTRAL_V1("Maven Central", "Maven Central", "https://mvnrepository.com","https://search.maven.org"),
+    MAVEN_CENTRAL_v2("Maven Central Sonatype", "Maven Central Sonatype", "https://central.sonatype.com/","https://repo.maven.apache.org"),
+    GRADLE_PLUGINS_PORTAL("Gradle", "Gradle Plugins Portal", "https://plugins.gradle.org","")
 
     final String title
     final String description
     final String website
+    final String apiUrl
 
-    DependenciesRepositoryType(String title, String description, String website) {
+    DependenciesRepositoryType(String title, String description, String website, String apiUrl) {
         this.title = title
         this.description = description
         this.website = website
+        this.apiUrl = apiUrl
     }
 }
