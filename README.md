@@ -1,7 +1,7 @@
 # Gradle Catalog Dependencies Monitor Plugin
 
 Gradle plugin for monitoring Gradle catalog dependencies. It generates reports to inform you about which dependencies in
-your catalog are up-to-date or need updating.
+your catalog are up to date or need updating.
 
 **```Latest Version 1.0.67```**
 
@@ -9,17 +9,17 @@ your catalog are up-to-date or need updating.
 
 ## Requirements
 
-- Minimum gradle version: 8
+- Minimum Gradle version: 8
 
 ## Main features
 
-* Checks all the defined dependencies in a standard gradle catalog
+* Checks all the defined dependencies in a standard Gradle catalog
 
 ## Goals
 
-* Provide a simple-to-use plugin to speed up and simplify dependencies's version check
+* Provide a simple-to-use plugin to speed up and simplify dependencies' version check
 
-## How to add Catalog Dependencies Monitor plugin in your gradle project
+## How to add Catalog Dependencies Monitor plugin in your Gradle project
 
 ```
 plugins {
@@ -29,15 +29,22 @@ plugins {
 
 ## Introduction
 
-The Gradle Catalog Dependencies Monitor Plugin is a plugin designed to simplify the management and monitoring of dependencies defined in a standard gradle catalog.
-In practice, instead of using similar plugins in every project or library, everything is centralized by moving the checks to the catalog side.
-By default, this plugin connects to the **Maven Central repository** and the **Gradle Plugin repository** to retrieve dependency metadata and verify whether newer versions are available.
+The Gradle Catalog Dependencies Monitor Plugin is a plugin designed to simplify the management and monitoring of dependencies defined in a
+standard Gradle catalog.
+In practice, instead of using similar plugins in every project or library, everything is centralized by moving the checks to the catalog
+side.
+By default, this plugin connects to the **Maven Central repository** and the **Gradle Plugin repository** to retrieve dependency metadata
+and verify whether newer versions are available.
 It produces a detailed report in **HTML** or a **JSON** format, showing the results of this lookup and comparison process.
-The report is divided in two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative libraries or plugins. 
+The report is divided into two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative
+libraries or plugins.
 
-## Usage
+## Plugin general usage
 
-Basically after importing the plugin you can use this gradle definition to setup the plugin in the build.gradle file.
+After importing the plugin, you can use this Gradle definition to set up the plugin in the build.gradle file and after that running the
+plugin tasks.
+
+## Plugin configuration
 
 ```
 catalogDependenciesMonitor {
@@ -69,29 +76,30 @@ catalogDependenciesMonitor {
 }
 ```
 
-You can find the plugin tasks under the task group **Catalog-monitor**. 
-The tasks whose name start with a **_** are internal and are not meant to be used.
+## Plugin tasks
 
-The gradle task to call to generate the report is named **generateReport**.
-Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the build/catalog-dependencies-monitor/ directory.
+You can find the plugin tasks under the task group **Catalog-monitor**.
+The tasks whose name starts with a **_** are internal and are not meant to be used, whereas the main plugin tasks are:
 
-The gradle task to automatically update your catalog tom file is named **updateDependenciesInTomCatalog**.
-We’ve been using this task for quite some time, although we still consider it experimental. 
-It works very well, but it may contain some bugs. Please use it and let us know what you think or report any issues you encounter.
-Note that it simply updates the versions in the toml file. It never commits any changes to git.
+* The Gradle task **generateReport**. Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the
+  build/catalog-dependencies-monitor/ directory.
+* The Gradle task **updateDependenciesInTomCatalog** to automatically update your catalog tom file. We’ve been using this task for quite
+  some time, although we still consider it experimental. It works very well, but it may contain some bugs. Please use it and let us know
+  what you think or report any issues you encounter. Note that it simply updates the versions in the toml file. It never commits any changes
+  to git.
 
 ## Contributors
 
-If you would like to help, but don't know where to start, please note that finding bugs and debugging the code is always
+If you would like to help but don't know where to start, please note that finding bugs and debugging the code is always
 a good start.
-Simple Pull Requests that fix anything other than Version Comparator core code (documentation, JavaDoc, typos, test
+Simple Pull Requests that fix anything other than Version Comparator core code (documentation, Javadoc, typos, test
 cases, etc) are
 always appreciated and would be merged quickly.
 However, if you want or feel the need to change the main code or add a new functionality, please do not issue a pull
 request
 without [creating a new  issue](https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin/issues/new)
 and discussing your desired
-changes,  _**before you start working on it**_.
+changes, _**before you start working on it**_.
 It would be a shame to reject your pull request if it might not align with the project's goals, design expectations or
 planned functionality.
 
