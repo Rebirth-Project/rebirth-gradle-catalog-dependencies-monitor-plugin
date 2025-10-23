@@ -22,15 +22,17 @@ import java.text.SimpleDateFormat
 
 plugins {
     id("groovy-gradle-plugin")
-    id("maven-publish")
-    //This must be used instead of maven-publish
-    //id("com.gradle.plugin-publish") version "1.3.0"
+    // Used to plublish development version in internal rebirth artifactory (use your own for testing)
+    id("maven-publish")        
+    id("com.gradle.plugin-publish") version "2.0.0"
 }
 
 project.ext {
     Date buildTimeAndDate = new Date()
     buildDate = new SimpleDateFormat("dd-MM-yyyy").format(buildTimeAndDate)
     buildTime = new SimpleDateFormat("HH:mm:ss.SSSZ").format(buildTimeAndDate)
+    
+    // Used to plublish development version in internal rebirth artifactory (use your own for testing)
     rebirthArtifactoryUrl = "https://www.rebirth-project.it/artifactory"
     snapshotRepository = rebirthArtifactoryUrl + "/lib-snapshot-local"
     releaseRepository = rebirthArtifactoryUrl + "/lib-release-local"
@@ -91,10 +93,10 @@ jar {
 // The names of the blocks inside "plugins" need to be unique, they will identify the plugins being configured.
 // All properties are mandatory.
 gradlePlugin {
-    website = project.ext.authorWebsite
-    vcsUrl = project.ext.pluginWebsite
+    website = "https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin"
+    vcsUrl = "https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin.git"
     plugins {
-        create("catalogDependenciesMonitorPlugin") {
+        create("RebirthCatalogDependenciesMonitorPlugin") {
             id = "it.rebirthproject.catalog-dependencies-monitor"
             implementationClass = "it.rebirthproject.catalog_dependencies_monitor.gradle.plugins.CatalogDependenciesMonitorPlugin"
             displayName = "Gradle Catalog Dependencies Monitor Plugin"
@@ -104,6 +106,7 @@ gradlePlugin {
     }
 }
 
+// Used to plublish development version in internal rebirth artifactory (use your own for testing)
 publishing {
     repositories {
         maven {
