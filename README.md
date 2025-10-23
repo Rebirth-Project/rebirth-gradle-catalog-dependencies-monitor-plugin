@@ -22,9 +22,8 @@ your catalog are up-to-date or need updating.
 ## How to add Catalog Dependencies Monitor plugin in your gradle project
 
 ```
-//va poi aggiornata la documentazione per mettere la versione e scaricare il plugin giusto dal gradle plugin site
 plugins {
-    id("it.rebirthproject.catalog-dependencies-monitor")
+    id("it.rebirthproject.catalog-dependencies-monitor") version "1.0.67"
 }
 ```
 
@@ -34,33 +33,52 @@ The Gradle Catalog Dependencies Monitor Plugin is a plugin designed to simplify 
 In practice, instead of using similar plugins in every project or library, everything is centralized by moving the checks to the catalog side.
 By default, this plugin connects to the **Maven Central repository** and the **Gradle Plugin repository** to retrieve dependency metadata and verify whether newer versions are available.
 It produces a detailed report in **HTML** or a **JSON** format, showing the results of this lookup and comparison process.
-The report is divided in two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative library or plugin. 
+The report is divided in two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative libraries or plugins. 
 
 ## Usage
 
+Basically after importing the plugin you can use this gradle definition to setup the plugin in the build.gradle file.
+
 ```
 catalogDependenciesMonitor {
-    // use the name of the catalog to monitor. "libs" in this case
+    // (mandatory) use the name of the catalog to monitor. "libs" in this case
     versionCatalog = project.extensions.getByType(VersionCatalogsExtension).named("libs") 
-    // (optional) If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
-    // The MAVEN_CENTRAL_V1 is deprecated and will be removed in future versions
-    mavenRepositoryType = "MAVEN_CENTRAL_V2"
+        
     // (optional) exclude libraries by group:artifact
     excludedLibraries = ["net.researchgate:gradle-release", "org.hidetake:core"]          
+
     // (optional) exclude plugins by pluginId
     excludedPlugins = []  
+
     // (optional) exclude library containing these strings (alpha and beta if you want to monitor only production ready libs)
     libraryVersionFilters = ["alpha", "beta"]                                             
+
     // (optional) specify the name of the generated report (catalog_report is the default if not specified)
     reportName = "catalog_report"                                                         
+
     // (optional) specify the type of the generated report (html or json are the possible choices. If not specified html will be used)
     reportType = "html"                                                                   
+
+    // (optional) If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
+    // This repository is https://repo.maven.apache.org and is used to retrieve xml metadata of artifacts
+    // The MAVEN_CENTRAL_V1 is deprecated and will be removed in future versions
+    // This repository is https://search.maven.org and is used to retrieve metadata artifacts in json format
+    // Is very discouraged to use MAVEN_CENTRAL_V1 sonce is deprecated and also a lot slower
+    // However if in future new repositories will be used this is the way to change them.
+    mavenRepositoryType = "MAVEN_CENTRAL_V2"
 }
 ```
 
-The gradle task to call to generate the report is named **generateReport**.
+You can find the plugin tasks under the task group **Catalog-monitor**. 
+The tasks whose name start with a **_** are internal and are not meant to be used.
 
-After that a report (html or json) will be generated inside the build directory.
+The gradle task to call to generate the report is named **generateReport**.
+Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the build/catalog-dependencies-monitor/ directory.
+
+The gradle task to automatically update your catalog tom file is named **updateDependenciesInTomCatalog**.
+We’ve been using this task for quite some time, although we still consider it experimental. 
+It works very well, but it may contain some bugs. Please use it and let us know what you think or report any issues you encounter.
+Note that it simply updates the versions in the toml file. It never commits any changes to git.
 
 ## Contributors
 
