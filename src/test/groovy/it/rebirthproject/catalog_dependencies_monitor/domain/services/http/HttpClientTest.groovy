@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue
 class HttpClientTest {
 
     private static final String VALID_HTTP_URL_RETURNING_HTML = "https://www.google.com"
-    private static final String VALID_HTTP_URL_RETURNING_JSON = "https://search.maven.org/solrsearch/select?q=g:ch.qos.logback+AND+a:logback-classic&core=gav&rows=1&wt=json"
+    private static final String VALID_HTTP_URL_RETURNING_XML = "https://repo.maven.apache.org/maven2/ch/qos/logback/logback-classic/maven-metadata.xml"
     private static final String INVALID_HTTP_URL = "invalid url"
 
     private HttpClient httpClient
@@ -47,14 +47,15 @@ class HttpClientTest {
     }
 
     @Test
-    void validHttpUrlReturnsAValidJsonResponse() {
-        Optional<String> httpResponse = httpClient.get(VALID_HTTP_URL_RETURNING_JSON)
+    void validHttpUrlReturnsAValidXmlResponse() {
+        Optional<String> httpResponse = httpClient.get(VALID_HTTP_URL_RETURNING_XML)
 
         assertTrue(httpResponse.isPresent(), "Response should be present")
         String response = httpResponse.get()
+        
         assertTrue(response.length() > 0, "Response should not be empty")
-        assertTrue(response.startsWith("{") || response.startsWith("["), "Response should start with '{' or '['")
-        assertTrue(response.endsWith("}") || response.endsWith("]"), "Response should end with '}' or ']'")
+        assertTrue(response.startsWith("<?xml"), "Response should start with '<?xml'")
+        assertTrue(response.endsWith(">"), "Response should end with '>'")
     }
 
     @Test

@@ -83,7 +83,7 @@ The tasks whose name starts with a **_** are internal and are not meant to be us
 
 * The Gradle task **generateReport**. Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the
   build/catalog-dependencies-monitor/ directory.
-* The Gradle task **updateDependenciesInTomCatalog** to automatically update your catalog tom file. We’ve been using this task for quite
+* The Gradle task **updateDependenciesInTomlCatalog** to automatically update your catalog toml file. We’ve been using this task for quite
   some time, although we still consider it experimental. It works very well, but it may contain some bugs. Please use it and let us know
   what you think or report any issues you encounter. Note that it simply updates the versions in the toml file. It never commits any changes
   to git.
