@@ -23,7 +23,7 @@ your catalog are up to date or need updating.
 
 ```
 plugins {
-    id("it.rebirthproject.catalog-dependencies-monitor") version "1.0.67"
+    id("it.rebirth-project.catalog-dependencies-monitor") version "1.0.67"
 }
 ```
 
