@@ -27,6 +27,8 @@ plugins {
     id("com.gradle.plugin-publish") version "2.0.0"
 }
 
+group = "it.rebirth-project"
+
 project.ext {
     Date buildTimeAndDate = new Date()
     buildDate = new SimpleDateFormat("dd-MM-yyyy").format(buildTimeAndDate)
@@ -97,7 +99,8 @@ gradlePlugin {
     vcsUrl = "https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin.git"
     plugins {
         create("RebirthCatalogDependenciesMonitorPlugin") {
-            id = "it.rebirthproject.catalog-dependencies-monitor"
+            //id = "it.rebirth-project.catalog-dependencies-monitor"
+            id = "${project.group}.catalog-dependencies-monitor"
             implementationClass = "it.rebirthproject.catalog_dependencies_monitor.gradle.plugins.CatalogDependenciesMonitorPlugin"
             displayName = "Gradle Catalog Dependencies Monitor Plugin"
             description = "Plugin for monitoring Gradle catalog dependencies. It generates reports to inform you about which dependencies in your catalog are up-to-date or need updating."
