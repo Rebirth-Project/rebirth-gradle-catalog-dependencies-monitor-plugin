@@ -37,7 +37,7 @@ interface CatalogMonitorExtension {
     // NOTE: To filter out library versions containing some string (eg "alpha", "beta")
     ListProperty<String> getLibraryVersionFilters()
 
-//    Property<String> getReportName()
+    Property<String> getReportName()
 
     RegularFileProperty getFileCatalogToml()
 
