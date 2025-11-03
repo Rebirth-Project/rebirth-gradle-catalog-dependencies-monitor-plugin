@@ -56,12 +56,10 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
             return Optional.empty()
         }
 
-        if (librariesFilters.isEmpty()) {
-            final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
+        final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
 
-            return Optional.ofNullable(providedXmlLatestVersion)
-                    .map { version -> new LibraryMetadata(groupId, artifactId, version) }
-                    .or(() -> calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId))
+        if (providedXmlLatestVersion != null && isVersionNotToFiltered(providedXmlLatestVersion, librariesFilters)) {
+            return Optional.of(new LibraryMetadata(groupId, artifactId, providedXmlLatestVersion))
         } else {
             return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)
         }
@@ -78,9 +76,13 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
         for (int i = 0; i < versionNodes.length; i++) {
             String version = versionNodes.item(i)?.textContent
             if (version && isVersionNotToFiltered(version, librariesFilters)) {
-                LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
-                if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {
-                    mostRecent = lib
+                try {
+                    LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
+                    if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {
+                        mostRecent = lib
+                    }
+                } catch (IllegalArgumentException ex) {
+                    log.warn("VersionComparator error", ex)
                 }
             }
         }
