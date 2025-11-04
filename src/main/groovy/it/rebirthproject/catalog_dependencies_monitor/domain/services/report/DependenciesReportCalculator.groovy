@@ -67,17 +67,25 @@ class DependenciesReportCalculator {
                 } else {
                     v1 = v1.trim();
                     v2 = v2.trim();
-                    int compareResult = versionComparator.compare(v1, v2);
+                    
+                    try {
+                        int compareResult = versionComparator.compare(v1, v2);
     
-                    if (compareResult < 0) {
-                        setReportElementState(reportElement, DependencyReportState.OUTDATED);
-                        report.outdated.add(reportElement);
-                    } else if (compareResult > 0) {
-                        setReportElementState(reportElement, DependencyReportState.EXCEEDING);
-                        report.exceeding.add(reportElement);
-                    } else {
-                        setReportElementState(reportElement, DependencyReportState.UPDATED);
-                        report.updated.add(reportElement);
+                        if (compareResult < 0) {
+                            setReportElementState(reportElement, DependencyReportState.OUTDATED);
+                            report.outdated.add(reportElement);
+                        } else if (compareResult > 0) {
+                            setReportElementState(reportElement, DependencyReportState.EXCEEDING);
+                            report.exceeding.add(reportElement);
+                        } else {
+                            setReportElementState(reportElement, DependencyReportState.UPDATED);
+                            report.updated.add(reportElement);
+                        }
+                    }
+                    catch (IllegalArgumentException ex) {
+                        log.info("VersionComparator error", ex)
+                        setReportElementState(reportElement, DependencyReportState.SKIPPED);
+                        report.skipped.add(reportElement);
                     }
                 }
             } else {
