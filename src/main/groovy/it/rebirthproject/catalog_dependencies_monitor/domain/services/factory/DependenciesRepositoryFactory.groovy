@@ -40,9 +40,8 @@ class DependenciesRepositoryFactory {
 
     DependenciesRepository create(DependenciesRepositoryType reportType) {
         switch (reportType) {
-            case DependenciesRepositoryType.MAVEN_CENTRAL_V1: return new MavenV1Repository(httpClient, new MavenV1DependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))
-            //value release must be taken as parameter    
-            case DependenciesRepositoryType.MAVEN_CENTRAL_V2: return new MavenV2Repository(httpClient, new MavenV2DependencyResponseMapper("release"))
+            case DependenciesRepositoryType.MAVEN_CENTRAL_V1: return new MavenV1Repository(httpClient, new MavenV1DependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))            
+            case DependenciesRepositoryType.MAVEN_CENTRAL_V2: return new MavenV2Repository(httpClient, new MavenV2DependencyResponseMapper(versionComparator,libVersionFilters))
             case DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL: return new GradlePortalRepository(httpClient, new GradlePortalsPluginsResponseMapper())
         }
     }

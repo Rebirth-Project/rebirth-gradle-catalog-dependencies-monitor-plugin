@@ -27,11 +27,12 @@ import org.w3c.dom.Document
 @Slf4j
 class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
     
-    //can be "release" or "latest"
-    private final String versionType
+    private final VersionComparator versionComparator
+    private final List<String> librariesFilters
 
-    MavenV2DependencyResponseMapper(String versionType) {
-        this.versionType= versionType;
+    MavenV2DependencyResponseMapper(VersionComparator versionComparator, List<String> librariesFilters) {
+        this.versionComparator = versionComparator
+        this.librariesFilters = librariesFilters
     }
 
     @Override
@@ -46,7 +47,6 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
         }
     }
 
-    
     private Optional<DependencyMetadata> getMostRecentDependencyLibraryIfPresent(Document rootNode) {
         final String groupId = rootNode.getElementsByTagName('groupId').item(0).firstChild.nodeValue
         final String artifactId = rootNode.getElementsByTagName('artifactId').item(0).firstChild.nodeValue
@@ -55,10 +55,38 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
             log.warn("Maven response missing groupId or artifactId")
             return Optional.empty()
         }
-        
-        final String providedXmlLatestVersion = rootNode.getElementsByTagName(versionType)?.item(0)?.firstChild?.nodeValue
-        
-        return Optional.ofNullable(providedXmlLatestVersion)        
-        .map(version -> new LibraryMetadata(groupId, artifactId, version));        
+
+        final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
+
+        if (providedXmlLatestVersion != null && isVersionNotToFilter(providedXmlLatestVersion, librariesFilters)) {
+            return Optional.of(new LibraryMetadata(groupId, artifactId, providedXmlLatestVersion))
+        } else {
+            return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)
+        }
+    }
+
+    private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(Document rootNode, String groupId, String artifactId) {
+        def versionNodes = rootNode.getElementsByTagName('version')
+        if (versionNodes == null || versionNodes.length == 0) {
+            log.warn("No <version> tags found for ${groupId}:${artifactId}")
+            return Optional.empty()
+        }
+
+        LibraryMetadata mostRecent = null
+        for (int i = 0; i < versionNodes.length; i++) {
+            String version = versionNodes.item(i)?.textContent
+            if (version && isVersionNotToFiltered(version, librariesFilters)) {
+                try {
+                    LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
+                    if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {
+                        mostRecent = lib
+                    }
+                } catch (IllegalArgumentException ex) {
+                    log.warn("VersionComparator error", ex)
+                }
+            }
+        }
+
+        return Optional.ofNullable(mostRecent)
     }
 }

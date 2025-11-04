@@ -54,7 +54,7 @@ class DependenciesRepositoryTest {
         final JsonSlurper jsonSlurper = new JsonSlurper()
         final HttpClient httpClient = new HttpClient()
         final MavenV1DependencyResponseMapper mavenV1DependencyResponseMapper = new MavenV1DependencyResponseMapper(versionComparator, jsonSlurper, new ArrayList<>())
-        final MavenV2DependencyResponseMapper mavenV2DependencyResponseMapper = new MavenV2DependencyResponseMapper("release")
+        final MavenV2DependencyResponseMapper mavenV2DependencyResponseMapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())
         final GradlePortalsPluginsResponseMapper gradlePortalsPluginsResponseMapper = new GradlePortalsPluginsResponseMapper()
         mavenV1Repository = new MavenV1Repository(httpClient, mavenV1DependencyResponseMapper)
         mavenV2Repository = new MavenV2Repository(httpClient, mavenV2DependencyResponseMapper)
