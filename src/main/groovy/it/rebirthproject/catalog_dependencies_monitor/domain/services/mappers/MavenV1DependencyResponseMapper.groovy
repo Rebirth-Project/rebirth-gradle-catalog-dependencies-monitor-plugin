@@ -43,7 +43,7 @@ class MavenV1DependencyResponseMapper implements RepositoryResponseMapper {
         DependencyMetadata latestVersionMavenDependency = null
         docs.stream()
                 .filter { doc -> doc != null && doc.v != null }
-                .filter { doc -> isVersionNotFiltered(doc.v as String, librariesFilters) }
+                .filter { doc -> isVersionNotToFilter(doc.v as String, librariesFilters) }
                 .forEach { doc ->
                     DependencyMetadata mavenDependency = new LibraryMetadata(doc.g, doc.a, doc.v)
                     if (latestVersionMavenDependency == null || isDependencyVersionMoreRecentThan(mavenDependency, latestVersionMavenDependency)) {
