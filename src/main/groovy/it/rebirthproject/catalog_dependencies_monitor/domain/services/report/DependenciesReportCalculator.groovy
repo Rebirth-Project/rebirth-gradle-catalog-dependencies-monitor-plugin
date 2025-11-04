@@ -83,7 +83,7 @@ class DependenciesReportCalculator {
                         }
                     }
                     catch (IllegalArgumentException ex) {
-                        log.info("VersionComparator error", ex)
+                        log.warn("VersionComparator error", ex)
                         setReportElementState(reportElement, DependencyReportState.SKIPPED);
                         report.skipped.add(reportElement);
                     }
