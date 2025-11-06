@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue
 
 class MavenV2DependencyResponseMapperTest {
 
-    private static final String JUNIT_XML_FILE_RESPONSE = "junit-response.xml"
-    private static final String SLF4J_XML_FILE_RESPONSE = "slf4j-response.xml"
+    private static final String JUNIT_XML_FILE_RESPONSE = "junit-maven-response.xml"
+    private static final String SLF4J_XML_FILE_RESPONSE = "slf4j-maven-response.xml"
     private static final String JUNIT_ID = "org.junit:junit-bom"
     private static final String SLF4J_ID = "org.slf4j:slf4j-api"
 
@@ -29,8 +29,8 @@ class MavenV2DependencyResponseMapperTest {
 
     @ParameterizedTest
     @CsvSource([
-            "'junit-response.xml', 'org.junit:junit-bom', '6.0.1'",
-            "'slf4j-response.xml', 'org.slf4j:slf4j-api', '2.1.0-alpha1'",
+            "'junit-maven-response.xml', 'org.junit:junit-bom', '6.0.1'",
+            "'slf4j-maven-response.xml', 'org.slf4j:slf4j-api', '2.1.0-alpha1'",
     ])
     void find_release_version_when_no_filter_set(String xmlFileResponse, String expectedId, String expectedVersion) throws IOException {
         final mapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())

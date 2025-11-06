@@ -26,6 +26,8 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers.Re
  GRADLE API Plugin portal (plugins)
 
  https://plugins.gradle.org/m2/${pluginIdWithSlashes}/${pluginId}.gradle.plugin/maven-metadata.xml
+ org.springframework.boot
+          https://plugins.gradle.org/m2/org/springframework/boot/org.springframework.boot.gradle.plugin/maven-metadata.xml
 
  EXAMPLE: https://plugins.gradle.org/m2/org/beryx/runtime/org.beryx.runtime.gradle.plugin/maven-metadata.xml
  */
