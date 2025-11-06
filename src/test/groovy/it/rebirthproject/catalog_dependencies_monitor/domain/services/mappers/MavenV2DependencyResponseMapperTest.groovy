@@ -8,11 +8,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
+import java.util.stream.Collectors
+
 import static org.junit.jupiter.api.Assertions.assertEquals
 import static org.junit.jupiter.api.Assertions.assertTrue
 
 class MavenV2DependencyResponseMapperTest {
 
+    private static final String JUNIT_XML_FILE_RESPONSE = "junit-response.xml"
+    private static final String SLF4J_XML_FILE_RESPONSE = "slf4j-response.xml"
     private static final String JUNIT_ID = "org.junit:junit-bom"
     private static final String SLF4J_ID = "org.slf4j:slf4j-api"
 
@@ -43,7 +47,7 @@ class MavenV2DependencyResponseMapperTest {
         final List<String> versionFilters = Arrays.asList("alpha", "beta")
         final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
-        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent("junit-response.xml"))
+        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(JUNIT_XML_FILE_RESPONSE))
 
         assertTrue(mavenDependencyMetadata.isPresent())
         assertEquals(JUNIT_ID, mavenDependencyMetadata.get().dependencyId)
@@ -55,7 +59,7 @@ class MavenV2DependencyResponseMapperTest {
         final List<String> versionFilters = Arrays.asList("ALPHA", "BETA")
         final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
-        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent("slf4j-response.xml"))
+        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(SLF4J_XML_FILE_RESPONSE))
 
         assertTrue(mavenDependencyMetadata.isPresent())
         assertEquals(SLF4J_ID, mavenDependencyMetadata.get().dependencyId)
@@ -67,7 +71,7 @@ class MavenV2DependencyResponseMapperTest {
         final List<String> versionFilters = Arrays.asList("alpha", "beta")
         final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
-        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent("slf4j-response.xml"))
+        Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(SLF4J_XML_FILE_RESPONSE))
 
         assertTrue(mavenDependencyMetadata.isPresent())
         assertEquals(SLF4J_ID, mavenDependencyMetadata.get().dependencyId)
@@ -79,16 +83,8 @@ class MavenV2DependencyResponseMapperTest {
             if (resourceAsStream == null) {
                 throw new IllegalArgumentException("File not found: " + fileName)
             }
-            try (InputStreamReader isr = new InputStreamReader(resourceAsStream)
-                 BufferedReader reader = new BufferedReader(isr)) {
-                StringBuilder fileContent = new StringBuilder()
-                String line = reader.readLine()
-                while (line != null) {
-                    fileContent.append(line)
-                    fileContent.append(System.lineSeparator())
-                    line = reader.readLine()
-                }
-                return fileContent.toString()
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resourceAsStream))) {
+                return reader.lines().collect(Collectors.joining(System.lineSeparator()))
             }
         }
     }
