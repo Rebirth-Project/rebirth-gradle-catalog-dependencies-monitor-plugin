@@ -16,79 +16,20 @@
  */
 package it.rebirthproject.catalog_dependencies_monitor.domain.services.mappers
 
-
 import groovy.util.logging.Slf4j
-import groovy.xml.DOMBuilder
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.DependencyMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
-import org.w3c.dom.Document
 
 @Slf4j
-// TODO: this and Gradle mapper has a lot of similar/duplicated code to refactor
-class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
-
-    private final VersionComparator versionComparator
-    private final List<String> librariesFilters
+class MavenV2DependencyResponseMapper extends AbstractXmlDependencyResponseMapper {
 
     MavenV2DependencyResponseMapper(VersionComparator versionComparator, List<String> librariesFilters) {
-        this.versionComparator = versionComparator
-        this.librariesFilters = librariesFilters
+        super(versionComparator, librariesFilters)
     }
 
     @Override
-    Optional<DependencyMetadata> map(String xmlResponse) {
-        try {
-            final Document rootNode = DOMBuilder.parse(new StringReader(xmlResponse))
-
-            return getMostRecentDependencyLibraryIfPresent(rootNode)
-        } catch (Exception e) {
-            log.error("Error trying to map the XML response", e)
-            return Optional<DependencyMetadata>.empty()
-        }
-    }
-
-    private Optional<DependencyMetadata> getMostRecentDependencyLibraryIfPresent(Document rootNode) {
-        final String groupId = rootNode.getElementsByTagName('groupId').item(0).firstChild.nodeValue
-        final String artifactId = rootNode.getElementsByTagName('artifactId').item(0).firstChild.nodeValue
-
-        if (!groupId || !artifactId) {
-            log.warn("Response missing groupId or artifactId")
-            return Optional.empty()
-        }
-
-        final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
-
-        if (providedXmlLatestVersion != null && isVersionNotToFilter(providedXmlLatestVersion, librariesFilters)) {
-            // First difference LibraryMetadata instead of PluginMetadata. and it takes 3 constructor args instead of 2
-            return Optional.of(new LibraryMetadata(groupId, artifactId, providedXmlLatestVersion))
-        } else {
-            return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)
-        }
-    }
-
-    private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(Document rootNode, String groupId, String artifactId) {
-        def versionNodes = rootNode.getElementsByTagName('version')
-        if (versionNodes == null || versionNodes.length == 0) {
-            log.warn("No <version> tags found for ${groupId}:${artifactId}")
-            return Optional.empty()
-        }
-
-        LibraryMetadata mostRecent = null
-        for (int i = 0; i < versionNodes.length; i++) {
-            String version = versionNodes.item(i)?.textContent
-            if (version && isVersionNotToFilter(version, librariesFilters)) {
-                try {
-                    LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
-                    if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {
-                        mostRecent = lib
-                    }
-                } catch (IllegalArgumentException ex) {
-                    log.warn("VersionComparator error", ex)
-                }
-            }
-        }
-
-        return Optional.ofNullable(mostRecent)
+    DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version) {
+        return new LibraryMetadata(groupId, artifactId, version)
     }
 }
