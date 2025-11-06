@@ -60,7 +60,7 @@ class GradlePortalsPluginsResponseMapperTest {
 
     @ParameterizedTest
     @MethodSource("versionFiltersNotMatchingForSpringBoot")
-    void find_most_recent_version_when_filters_not_match_for_case(List<String> versionFilters) {
+    void find_most_recent_version_when_filters_not_match(List<String> versionFilters) {
         final def mapper = new GradlePortalsPluginsResponseMapper(versionComparator, versionFilters)
 
         Optional<DependencyMetadata> gradleDependencyMetadata = mapper.map(readFileResourceContent(SPRINGBOOT_XML_FILE_RESPONSE))

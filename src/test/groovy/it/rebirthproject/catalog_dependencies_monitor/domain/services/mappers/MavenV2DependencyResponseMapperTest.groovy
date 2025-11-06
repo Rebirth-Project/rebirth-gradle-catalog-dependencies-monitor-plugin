@@ -56,7 +56,7 @@ class MavenV2DependencyResponseMapperTest {
     }
 
     @Test
-    void find_most_recent_version_when_filters_not_match_for_case() {
+    void find_most_recent_version_when_filters_not_match() {
         final List<String> versionFilters = Arrays.asList("ALPHA", "BETA")
         final def mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
