@@ -26,7 +26,7 @@ import org.w3c.dom.Document
 
 @Slf4j
 class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
-    
+
     private final VersionComparator versionComparator
     private final List<String> librariesFilters
 
@@ -75,7 +75,7 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
         LibraryMetadata mostRecent = null
         for (int i = 0; i < versionNodes.length; i++) {
             String version = versionNodes.item(i)?.textContent
-            if (version && isVersionNotToFiltered(version, librariesFilters)) {
+            if (version && isVersionNotToFilter(version, librariesFilters)) {
                 try {
                     LibraryMetadata lib = new LibraryMetadata(groupId, artifactId, version)
                     if (mostRecent == null || versionComparator.compare(lib.dependencyVersion, mostRecent.dependencyVersion) > 0) {

@@ -21,14 +21,14 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.D
 interface RepositoryResponseMapper {
     Optional<DependencyMetadata> map(String response)
 
-default boolean isVersionNotToFilter(String version, List<String> filters) {
-        if (filters) {    
+    default boolean isVersionNotToFilter(String version, List<String> filters) {
+        if (filters) {
             for (String filter : filters) {
                 if (version.containsIgnoreCase(filter)) {
                     return false
                 }
-            }       
+            }
         }
-        return true;
+        return true
     }
 }
