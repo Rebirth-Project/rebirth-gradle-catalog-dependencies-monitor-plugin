@@ -24,7 +24,7 @@ interface RepositoryResponseMapper {
     default boolean isVersionNotToFilter(String version, List<String> filters) {
         if (filters) {
             for (String filter : filters) {
-                if (version.containsIgnoreCase(filter)) {
+                if (version.contains(filter)) {
                     return false
                 }
             }
