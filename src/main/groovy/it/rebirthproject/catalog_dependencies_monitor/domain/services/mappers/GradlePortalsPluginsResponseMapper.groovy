@@ -20,22 +20,74 @@ import groovy.util.logging.Slf4j
 import groovy.xml.DOMBuilder
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.DependencyMetadata
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.PluginMetadata
+import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import org.w3c.dom.Document
 
 @Slf4j
+// TODO: this and MavenV2 mapper has a lot of similar/duplicated code to refactor
 class GradlePortalsPluginsResponseMapper implements RepositoryResponseMapper {
+
+    private final VersionComparator versionComparator
+    private final List<String> pluginsFilters
+
+    GradlePortalsPluginsResponseMapper(VersionComparator versionComparator, List<String> pluginsFilters) {
+        this.versionComparator = versionComparator
+        this.pluginsFilters = pluginsFilters
+    }
 
     @Override
     Optional<DependencyMetadata> map(String xmlResponse) {
         try {
             final Document rootNode = DOMBuilder.parse(new StringReader(xmlResponse))
-            final String groupId = rootNode.getElementsByTagName('groupId').item(0).firstChild.nodeValue
-            final String version = rootNode.getElementsByTagName('version').item(0).firstChild.nodeValue
-            final DependencyMetadata gradlePluginMetadata = new PluginMetadata(groupId, version)
-            log.debug("Gradle plugin metadata: {}", gradlePluginMetadata)
-            return Optional.ofNullable(gradlePluginMetadata)
-        } catch (Exception ignored) {
+
+            return getMostRecentDependencyLibraryIfPresent(rootNode)
+        } catch (Exception e) {
+            log.error("Error trying to map the XML response", e)
             return Optional<DependencyMetadata>.empty()
         }
+    }
+
+    private Optional<DependencyMetadata> getMostRecentDependencyLibraryIfPresent(Document rootNode) {
+        final String groupId = rootNode.getElementsByTagName('groupId').item(0).firstChild.nodeValue
+        final String artifactId = rootNode.getElementsByTagName('artifactId').item(0).firstChild.nodeValue
+
+        if (!groupId || !artifactId) {
+            log.warn("Response missing groupId or artifactId")
+            return Optional.empty()
+        }
+
+        final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
+
+        if (providedXmlLatestVersion != null && isVersionNotToFilter(providedXmlLatestVersion, pluginsFilters)) {
+            // First difference PluginMetadata instead of LibraryMetadata. and it takes 2 constructor args instead of 3
+            return Optional.of(new PluginMetadata(groupId, providedXmlLatestVersion))
+        } else {
+            return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)
+        }
+    }
+
+    private Optional<DependencyMetadata> calculateMostRecentDependencyLibraryIfPresent(Document rootNode, String groupId, String artifactId) {
+        def versionNodes = rootNode.getElementsByTagName('version')
+        if (versionNodes == null || versionNodes.length == 0) {
+            log.warn("No <version> tags found for ${groupId}:${artifactId}")
+            return Optional.empty()
+        }
+
+        PluginMetadata mostRecent = null
+        for (int i = 0; i < versionNodes.length; i++) {
+            String version = versionNodes.item(i)?.textContent
+            if (version && isVersionNotToFilter(version, pluginsFilters)) {
+                try {
+                    PluginMetadata plugin = new PluginMetadata(groupId, version)
+                    if (mostRecent == null || versionComparator.compare(plugin.dependencyVersion, mostRecent.dependencyVersion) > 0) {
+                        mostRecent = plugin
+                    }
+                } catch (IllegalArgumentException ex) {
+                    log.warn("VersionComparator error", ex)
+                }
+            }
+        }
+
+        return Optional.ofNullable(mostRecent)
     }
 }

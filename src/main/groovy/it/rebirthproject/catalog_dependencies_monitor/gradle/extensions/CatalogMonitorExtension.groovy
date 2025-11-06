@@ -34,8 +34,11 @@ interface CatalogMonitorExtension {
     // NOTE: To exclude a plugin add the id
     ListProperty<String> getExcludedPlugins()
 
-    // NOTE: To filter out library versions containing some string (eg "alpha", "beta")
+    // NOTE: To exclude library versions containing these strings (alpha and beta if you want to monitor only production ready libs)
     ListProperty<String> getLibraryVersionFilters()
+
+    // NOTE: To exclude plugin versions containing these strings (alpha and beta if you want to monitor only production ready libs)
+    ListProperty<String> getPluginVersionFilters()
 
     Property<String> getReportName()
 

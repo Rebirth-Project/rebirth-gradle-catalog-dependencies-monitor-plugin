@@ -34,7 +34,7 @@ class MavenV2DependencyResponseMapperTest {
             "'slf4j-maven-response.xml', 'org.slf4j:slf4j-api', '2.1.0-alpha1'",
     ])
     void find_release_version_when_no_filter_set(String xmlFileResponse, String expectedId, String expectedVersion) throws IOException {
-        final mapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())
+        final def mapper = new MavenV2DependencyResponseMapper(versionComparator, new ArrayList<>())
 
         Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(xmlFileResponse))
 
@@ -46,7 +46,7 @@ class MavenV2DependencyResponseMapperTest {
     @Test
     void find_release_version_when_filters_not_match() {
         final List<String> versionFilters = Arrays.asList("alpha", "beta")
-        final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
+        final def mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
         Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(JUNIT_XML_FILE_RESPONSE))
 
@@ -58,7 +58,7 @@ class MavenV2DependencyResponseMapperTest {
     @Test
     void find_most_recent_version_when_filters_not_match_for_case() {
         final List<String> versionFilters = Arrays.asList("ALPHA", "BETA")
-        final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
+        final def mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
         Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(SLF4J_XML_FILE_RESPONSE))
 
@@ -70,7 +70,7 @@ class MavenV2DependencyResponseMapperTest {
     @Test
     void find_most_recent_version_when_filters_match() {
         final List<String> versionFilters = Arrays.asList("alpha", "beta")
-        final mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
+        final def mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
         Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(SLF4J_XML_FILE_RESPONSE))
 

@@ -39,6 +39,8 @@ abstract class CatalogMonitorContext implements BuildService<Params>, AutoClosea
         Property<String> getMavenRepositoryType()
 
         ListProperty<String> getLibraryVersionFilters()
+
+        ListProperty<String> getPluginVersionFilters()
     }
 
     private final DependenciesReportCalculator reportCalculator
@@ -54,10 +56,11 @@ abstract class CatalogMonitorContext implements BuildService<Params>, AutoClosea
         final TomlSlurper tomlReader = new TomlSlurper()
         final HttpClient httpClient = new HttpClient()
         final List<String> libVersionFilters = getParameters().getLibraryVersionFilters().get()
+        final List<String> pluginVersionFilters = getParameters().getPluginVersionFilters().get()
 
         final String mavenRepositoryStringType = getParameters().getMavenRepositoryType().get()
         this.mavenRepositoryType = DependenciesRepositoryType.getMavenRepositoryTypeFromString(mavenRepositoryStringType)
-        final DependenciesRepositoryFactory dependenciesRepositoryFactory = new DependenciesRepositoryFactory(httpClient, versionComparator, jsonReader, libVersionFilters)
+        final DependenciesRepositoryFactory dependenciesRepositoryFactory = new DependenciesRepositoryFactory(httpClient, versionComparator, jsonReader, libVersionFilters, pluginVersionFilters)
 
         this.librariesReport = new DependenciesReport(mavenRepositoryType)
         this.pluginsReport = new DependenciesReport(DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)

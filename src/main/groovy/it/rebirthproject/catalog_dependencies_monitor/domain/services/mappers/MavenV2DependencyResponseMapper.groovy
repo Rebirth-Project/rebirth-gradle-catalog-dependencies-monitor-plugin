@@ -25,6 +25,7 @@ import it.rebirthproject.versioncomparator.comparator.VersionComparator
 import org.w3c.dom.Document
 
 @Slf4j
+// TODO: this and Gradle mapper has a lot of similar/duplicated code to refactor
 class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
 
     private final VersionComparator versionComparator
@@ -42,7 +43,7 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
 
             return getMostRecentDependencyLibraryIfPresent(rootNode)
         } catch (Exception e) {
-            log.error("Errore durante il mapping della risposta XML", e)
+            log.error("Error trying to map the XML response", e)
             return Optional<DependencyMetadata>.empty()
         }
     }
@@ -52,13 +53,14 @@ class MavenV2DependencyResponseMapper implements RepositoryResponseMapper {
         final String artifactId = rootNode.getElementsByTagName('artifactId').item(0).firstChild.nodeValue
 
         if (!groupId || !artifactId) {
-            log.warn("Maven response missing groupId or artifactId")
+            log.warn("Response missing groupId or artifactId")
             return Optional.empty()
         }
 
         final String providedXmlLatestVersion = rootNode.getElementsByTagName('release')?.item(0)?.firstChild?.nodeValue
 
         if (providedXmlLatestVersion != null && isVersionNotToFilter(providedXmlLatestVersion, librariesFilters)) {
+            // First difference LibraryMetadata instead of PluginMetadata. and it takes 3 constructor args instead of 2
             return Optional.of(new LibraryMetadata(groupId, artifactId, providedXmlLatestVersion))
         } else {
             return calculateMostRecentDependencyLibraryIfPresent(rootNode, groupId, artifactId)

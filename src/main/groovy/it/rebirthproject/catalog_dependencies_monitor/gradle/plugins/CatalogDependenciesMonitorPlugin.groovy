@@ -42,6 +42,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.excludedLibraries.convention([])
         catalogMonitorExtension.excludedPlugins.convention([])
         catalogMonitorExtension.libraryVersionFilters.convention([])
+        catalogMonitorExtension.pluginVersionFilters.convention([])
         catalogMonitorExtension.fileCatalogToml.convention(project.layout.projectDirectory.file("${DEFAULT_CATALOG_TOML_FOLDER}/${DEFAULT_CATALOG_TOML_FILE}"))
         catalogMonitorExtension.fileHtmlReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.html"))
         catalogMonitorExtension.fileJsonReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.json"))
@@ -49,6 +50,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         project.gradle.sharedServices.registerIfAbsent("catalogMonitorContext", CatalogMonitorContext.class, spec -> {
             spec.parameters.mavenRepositoryType.convention(catalogMonitorExtension.mavenRepositoryType)
             spec.parameters.libraryVersionFilters.convention(catalogMonitorExtension.libraryVersionFilters)
+            spec.parameters.pluginVersionFilters.convention(catalogMonitorExtension.pluginVersionFilters)
             spec.maxParallelUsages.set(1)
         })
 

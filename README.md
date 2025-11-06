@@ -46,6 +46,9 @@ plugin tasks.
 
 ## Plugin configuration
 
+    // NOTE: To filter out plugins versions containing some strings (eg "alpha", "beta")
+    ListProperty<String> getPluginsVersionFilters()
+
 ```
 catalogDependenciesMonitor {
     // (mandatory) use the name of the catalog to monitor. "libs" in this case
@@ -57,8 +60,11 @@ catalogDependenciesMonitor {
     // (optional) exclude plugins by pluginId
     excludedPlugins = []  
 
-    // (optional) exclude library containing these strings (alpha and beta if you want to monitor only production ready libs)
-    libraryVersionFilters = ["alpha", "beta"]                                             
+    // (optional) exclude library versions containing these strings (alpha and beta if you want to monitor only production ready libs)
+    libraryVersionFilters = ["alpha", "beta"]
+    
+    // (optional) exclude plugin versions containing these strings (alpha and beta if you want to monitor only production ready libs)
+    pluginVersionFilters = ["alpha", "beta"]                               
 
     // (optional) specify the name of the generated report (catalog_report is the default if not specified)
     reportName = "catalog_report"                                                         

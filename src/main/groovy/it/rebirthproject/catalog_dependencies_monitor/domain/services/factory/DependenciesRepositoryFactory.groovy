@@ -30,19 +30,21 @@ class DependenciesRepositoryFactory {
     private final VersionComparator versionComparator
     private final JsonSlurper jsonReader
     private final List<String> libVersionFilters
+    private final List<String> pluginVersionFilters
 
-    DependenciesRepositoryFactory(HttpClient httpClient, VersionComparator versionComparator, JsonSlurper jsonReader, List<String> libVersionFilters) {
+    DependenciesRepositoryFactory(HttpClient httpClient, VersionComparator versionComparator, JsonSlurper jsonReader, List<String> libVersionFilters, List<String> pluginVersionFilters) {
         this.httpClient = httpClient
         this.versionComparator = versionComparator
         this.jsonReader = jsonReader
         this.libVersionFilters = libVersionFilters
+        this.pluginVersionFilters = pluginVersionFilters
     }
 
     DependenciesRepository create(DependenciesRepositoryType reportType) {
         switch (reportType) {
             case DependenciesRepositoryType.MAVEN_CENTRAL_V1: return new MavenV1Repository(httpClient, new MavenV1DependencyResponseMapper(versionComparator, jsonReader, libVersionFilters))            
             case DependenciesRepositoryType.MAVEN_CENTRAL_V2: return new MavenV2Repository(httpClient, new MavenV2DependencyResponseMapper(versionComparator,libVersionFilters))
-            case DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL: return new GradlePortalRepository(httpClient, new GradlePortalsPluginsResponseMapper())
+            case DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL: return new GradlePortalRepository(httpClient, new GradlePortalsPluginsResponseMapper(versionComparator, pluginVersionFilters))
         }
     }
 }
