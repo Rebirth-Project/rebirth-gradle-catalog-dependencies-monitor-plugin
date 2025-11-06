@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue
 
 class MavenV2DependencyResponseMapperTest {
 
+    private static final String XML_RESPONSE_FOLDER = "maven"
     private static final String JUNIT_XML_FILE_RESPONSE = "junit-maven-response.xml"
     private static final String SLF4J_XML_FILE_RESPONSE = "slf4j-maven-response.xml"
     private static final String JUNIT_ID = "org.junit:junit-bom"
@@ -79,7 +80,7 @@ class MavenV2DependencyResponseMapperTest {
     }
 
     private String readFileResourceContent(String fileName) throws IOException {
-        try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+        try (InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(XML_RESPONSE_FOLDER + "/" + fileName)) {
             if (resourceAsStream == null) {
                 throw new IllegalArgumentException("File not found: " + fileName)
             }
