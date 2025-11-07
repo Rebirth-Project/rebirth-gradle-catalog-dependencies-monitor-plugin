@@ -57,7 +57,7 @@ class MavenV2DependencyResponseMapperTest {
 
     @Test
     void find_most_recent_version_when_filters_not_match() {
-        final List<String> versionFilters = Arrays.asList("ALPHA", "BETA")
+        final List<String> versionFilters = Arrays.asList("BETA")
         final def mapper = new MavenV2DependencyResponseMapper(versionComparator, versionFilters)
 
         Optional<DependencyMetadata> mavenDependencyMetadata = mapper.map(readFileResourceContent(SLF4J_XML_FILE_RESPONSE))
