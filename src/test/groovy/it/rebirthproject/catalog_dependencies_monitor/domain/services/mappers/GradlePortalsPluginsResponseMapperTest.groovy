@@ -95,12 +95,9 @@ class GradlePortalsPluginsResponseMapperTest {
 
     private static Stream<Arguments> versionFiltersNotMatchingForSpringBoot() {
         return Stream.of(
-                Arguments.of(["m", "rc"]),
-                Arguments.of(["rc", "m"]),
-                Arguments.of(["rc1", "m1", "m2", "m3"]),
-                Arguments.of(["m1", "m2", "m3", "rc1"]),
-                Arguments.of(["ALPHA", "m", "rc"]),
-                Arguments.of(["ALPHA", "m", "BETA", "rc"])
+                Arguments.of([]),
+                Arguments.of(["ALPHA"]),
+                Arguments.of(["ALPHA", "BETA"])
         )
     }
 
