@@ -67,10 +67,7 @@ catalogDependenciesMonitor {
     pluginVersionFilters = ["alpha", "beta"]                               
 
     // (optional) specify the name of the generated report (catalog_report is the default if not specified)
-    reportName = "catalog_report"                                                         
-
-    // (optional) specify the type of the generated report (html or json are the possible choices. If not specified html will be used)
-    reportType = "html"                                                                   
+    reportName = "catalog_report"                                                                                                                         
 
     // (optional) If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
     // This repository is https://repo.maven.apache.org and is used to retrieve xml metadata of artifacts
