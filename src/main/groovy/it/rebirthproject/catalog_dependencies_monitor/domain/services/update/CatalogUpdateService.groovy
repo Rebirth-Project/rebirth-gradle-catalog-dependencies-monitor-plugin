@@ -60,7 +60,7 @@ class CatalogUpdateService {
                 final def catalogContent = catalogFile.text
                 final def catalogTomlContent = tomlReader.parseText(catalogContent)
 
-                final def version = catalogTomlContent?."${reportType.tomlDescription}"?."${catalogAlias}"?.version
+                final def version = catalogTomlContent?."${dependenciesRepositoryType.tomlDescription}"?."${catalogAlias}"?.version
                 if (version) {
                     if (version instanceof String) {
                         final def updatedCatalogContent = catalogContent.replaceAll(/(${catalogAlias}\s*=\s*.*version\s*=\s*")([^"]*)(?=")/, "\$1${versionInRepo}")
