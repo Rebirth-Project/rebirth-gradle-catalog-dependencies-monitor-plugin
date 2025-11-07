@@ -21,6 +21,7 @@ import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.D
 import it.rebirthproject.catalog_dependencies_monitor.domain.data.dependencies.LibraryMetadata
 import it.rebirthproject.versioncomparator.comparator.VersionComparator
 
+@Deprecated
 class MavenV1DependencyResponseMapper implements RepositoryResponseMapper {
 
     private final VersionComparator versionComparator

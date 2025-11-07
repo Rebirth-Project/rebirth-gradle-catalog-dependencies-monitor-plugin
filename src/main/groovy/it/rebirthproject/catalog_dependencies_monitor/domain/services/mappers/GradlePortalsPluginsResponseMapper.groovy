@@ -31,7 +31,7 @@ class GradlePortalsPluginsResponseMapper extends AbstractXmlDependencyResponseMa
     }
 
     @Override
-    DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version) {
+    protected DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version) {
         return new PluginMetadata(groupId, version)
     }
 }

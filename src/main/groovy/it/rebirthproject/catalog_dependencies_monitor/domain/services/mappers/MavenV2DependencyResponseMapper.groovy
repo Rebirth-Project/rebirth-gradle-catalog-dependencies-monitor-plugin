@@ -29,7 +29,7 @@ class MavenV2DependencyResponseMapper extends AbstractXmlDependencyResponseMappe
     }
 
     @Override
-    DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version) {
+    protected DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version) {
         return new LibraryMetadata(groupId, artifactId, version)
     }
 }

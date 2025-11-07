@@ -29,7 +29,7 @@ abstract class AbstractXmlDependencyResponseMapper implements RepositoryResponse
     }
 
     // Abstract method to be implemented by subclasses!
-    abstract DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version)
+    protected abstract DependencyMetadata createDependencyMetadata(String groupId, String artifactId, String version)
 
     private Optional<DependencyMetadata> getMostRecentDependencyIfPresent(Document rootNode) {
         final String groupId = rootNode.getElementsByTagName('groupId').item(0)?.firstChild?.nodeValue
