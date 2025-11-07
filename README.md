@@ -3,7 +3,7 @@
 Gradle plugin for monitoring Gradle catalog dependencies. It generates reports to inform you about which dependencies in
 your catalog are up to date or need updating.
 
-**```Latest Version 1.0.68```**
+**```Latest Version 1.0.69```**
 
 ![Build Status](https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin/actions/workflows/build.yml/badge.svg?raw=true)
 
@@ -23,7 +23,7 @@ your catalog are up to date or need updating.
 
 ```
 plugins {
-    id("it.rebirth-project.catalog-dependencies-monitor") version "1.0.68"
+    id("it.rebirth-project.catalog-dependencies-monitor") version "1.0.69"
 }
 ```
 
@@ -67,6 +67,7 @@ catalogDependenciesMonitor {
     pluginVersionFilters = ["alpha", "beta"]                               
 
     // (optional) specify the name of the generated report (catalog_report is the default if not specified)
+    // The report name accepts only letters, numbers, dots, hyphens and underscores
     reportName = "catalog_report"                                                                                                                         
 
     // (optional) If nothing is specified here the Maven repository will be MAVEN_CENTRAL_V2 used as default
