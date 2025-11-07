@@ -34,7 +34,7 @@ class GradlePortalsPluginsResponseMapperTest {
     @ParameterizedTest
     @CsvSource([
             "'beryx-gradle-response.xml', 'org.beryx.runtime', '2.0.1'",
-            "'springboot-gradle-response.xml', 'org.springframework.boot', '4.0.0-RC1'",
+            "'springboot-gradle-response.xml', 'org.springframework.boot', '4.0.0-RC2'",
     ])
     void find_release_version_when_no_filter_set(String xmlFileResponse, String expectedId, String expectedVersion) throws IOException {
         final def mapper = new GradlePortalsPluginsResponseMapper(versionComparator, new ArrayList<>())
@@ -67,7 +67,7 @@ class GradlePortalsPluginsResponseMapperTest {
 
         assertTrue(gradleDependencyMetadata.isPresent())
         assertEquals(SPRINGBOOT_ID, gradleDependencyMetadata.get().dependencyId)
-        assertEquals("4.0.0-RC1", gradleDependencyMetadata.get().dependencyVersion)
+        assertEquals("4.0.0-RC2", gradleDependencyMetadata.get().dependencyVersion)
     }
 
     @ParameterizedTest
@@ -106,8 +106,8 @@ class GradlePortalsPluginsResponseMapperTest {
         return Stream.of(
                 Arguments.of(["M", "RC"]),
                 Arguments.of(["RC", "M"]),
-                Arguments.of(["M1", "M2", "M3", "RC1"]),
-                Arguments.of(["RC1", "M1", "M2", "M3"]),
+                Arguments.of(["M1", "M2", "M3", "RC1", "RC2"]),
+                Arguments.of(["RC1", "RC2", "M1", "M2", "M3"]),
                 Arguments.of(["ALPHA", "M", "RC"]),
                 Arguments.of(["ALPHA", "M", "BETA", "RC"])
         )
