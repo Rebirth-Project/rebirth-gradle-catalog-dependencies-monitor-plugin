@@ -43,9 +43,31 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.excludedPlugins.convention([])
         catalogMonitorExtension.libraryVersionFilters.convention([])
         catalogMonitorExtension.pluginVersionFilters.convention([])
+        catalogMonitorExtension.reportName.convention(DEFAULT_REPORT_FILE_NAME)
+
+        String validReportNameFormat = /^[A-Za-z0-9_.-]+$/
+
+        def validatedReportName = catalogMonitorExtension.reportName.map { name ->
+            if (!name.matches(validReportNameFormat)) {
+                throw new IllegalArgumentException(
+                        "The report name '${name}' is not valid. Only letters, numbers, dots, hyphens and underscores are allowed."
+                )
+            }
+            return name
+        }
+
         catalogMonitorExtension.fileCatalogToml.convention(project.layout.projectDirectory.file("${DEFAULT_CATALOG_TOML_FOLDER}/${DEFAULT_CATALOG_TOML_FILE}"))
-        catalogMonitorExtension.fileHtmlReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.html"))
-        catalogMonitorExtension.fileJsonReport.convention(project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${DEFAULT_REPORT_FILE_NAME}.json"))
+        catalogMonitorExtension.fileHtmlReport.convention(
+                validatedReportName.map { name ->
+                    project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${name}.html").get()
+                }
+        )
+
+        catalogMonitorExtension.fileJsonReport.convention(
+                validatedReportName.map { name ->
+                    project.layout.buildDirectory.file("${DEFAULT_REPORT_FOLDER}/${name}.json").get()
+                }
+        )
 
         project.gradle.sharedServices.registerIfAbsent("catalogMonitorContext", CatalogMonitorContext.class, spec -> {
             spec.parameters.mavenRepositoryType.convention(catalogMonitorExtension.mavenRepositoryType)
@@ -61,7 +83,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         }
 
         final def taskCalculateDependenciesUpdates = project.tasks.register("_calculateDependenciesUpdates", CalculateDependenciesUpdatesTask) {
-            description = "Calculate a report on the dependency update status in the rebirth-catalog"
+            description = "Calculate reportName report on the dependency update status in the rebirth-catalog"
             group = PLUGIN_TASKS_GROUP
             versionCatalog.convention(catalogMonitorExtension.versionCatalog)
             excludedLibraries.convention(catalogMonitorExtension.excludedLibraries)
@@ -69,7 +91,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         }
 
         def taskGenerateReport = project.tasks.register("generateReport", GenerateReportTask) {
-            description = "Generates a report on the dependency update status in the catalog"
+            description = "Generates reportName report on the dependency update status in the catalog"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskCalculateDependenciesUpdates, taskGenerateCss)
             fileHtmlReport.convention(catalogMonitorExtension.fileHtmlReport)
