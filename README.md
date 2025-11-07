@@ -9,7 +9,7 @@ your catalog are up to date or need updating.
 
 ## Requirements
 
-- Minimum Gradle version: 8
+- Minimum Gradle version: 8.4
 
 ## Main features
 

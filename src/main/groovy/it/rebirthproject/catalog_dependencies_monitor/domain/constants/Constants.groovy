@@ -25,7 +25,7 @@ class Constants {
 
     public static final String PLUGIN_NAME = CatalogDependenciesMonitorPlugin.class.getSimpleName()
     public static final String PLUGIN_TASKS_GROUP = "catalog-monitor"
-    public static final String MIN_GRADLE_VERSION = "7.0"
+    public static final String MIN_GRADLE_VERSION = "8.4"
     public static final String DEFAULT_REPORT_FOLDER = "catalog-dependencies-monitor"
     public static final String DEFAULT_REPORT_FILE_NAME = "catalog_report"
     public static final String DEFAULT_CATALOG_TOML_FOLDER = "gradle"
