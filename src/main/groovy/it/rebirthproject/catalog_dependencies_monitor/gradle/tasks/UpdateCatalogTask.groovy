@@ -50,12 +50,21 @@ abstract class UpdateCatalogTask extends DefaultTask {
         final File jsonReportFile = fileJsonReport.get().asFile
         checkIfFileExistsOrThrowException(jsonReportFile)
 
-        log.info("updating libraries in catalog toml file...")
-        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, mavenRepositoryType)
-        log.info("updating plugins in catalog toml file...")
-        catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)
+        log.info("Searching for libraries to update in toml catalog...")
+        int numOfUpdatedLibs = catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, mavenRepositoryType)
+        if (numOfUpdatedLibs > 0) {
+            println String.format("%s libraries updated in toml catalog", numOfUpdatedLibs)
+        }
 
-        println "Dependencies updated in toml catalog file"
+        log.info("Searching for plugins to update in toml catalog...")
+        int numOfUpdatedPlugins = catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)
+        if (numOfUpdatedPlugins > 0) {
+            println String.format("%s plugins updated in toml catalog", numOfUpdatedPlugins)
+        }
+
+        if (numOfUpdatedLibs == 0 && numOfUpdatedPlugins == 0) {
+            println "All the dependencies in the toml catalog are up to date"
+        }
     }
 
     private static void checkIfFileExistsOrThrowException(File file) {

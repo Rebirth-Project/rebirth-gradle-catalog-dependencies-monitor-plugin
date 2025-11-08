@@ -34,7 +34,9 @@ class CatalogUpdateService {
         this.tomlReader = tomlReader
     }
 
-    def updateOutdatedDependencies(File catalogFile, File jsonReportFile, DependenciesRepositoryType dependenciesRepositoryType) {
+    int updateOutdatedDependencies(File catalogFile, File jsonReportFile, DependenciesRepositoryType dependenciesRepositoryType) {
+        int numberOfUpdatedDependencies = 0
+
         final def jsonReportContent = jsonReader.parse(jsonReportFile)
         log.debug("jsonReportContent: ${jsonReportContent}")
 
@@ -79,11 +81,15 @@ class CatalogUpdateService {
                 }
             }
 
-            if (!isDependencyUpdated) {
+            if (isDependencyUpdated) {
+                numberOfUpdatedDependencies++
+            } else {
                 log.warn("WARNING: dependency ${outdatedDependency} not updated")
             }
 
             log.info("-------------------------------------------------------")
         }
+
+        return numberOfUpdatedDependencies
     }
 }
