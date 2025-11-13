@@ -1,1 +1,1 @@
-# This subproject is only used for fakepackage
+# This subproject is only used for test
