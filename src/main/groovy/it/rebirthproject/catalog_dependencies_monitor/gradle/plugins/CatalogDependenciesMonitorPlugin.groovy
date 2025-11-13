@@ -45,8 +45,7 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         catalogMonitorExtension.pluginVersionFilters.convention([])
         catalogMonitorExtension.reportName.convention(DEFAULT_REPORT_FILE_NAME)
 
-        String validReportNameFormat = /^[A-Za-z0-9_.-]+$/
-
+        final String validReportNameFormat = /^[A-Za-z0-9_.-]+$/
         def validatedReportName = catalogMonitorExtension.reportName.map { name ->
             if (!name.matches(validReportNameFormat)) {
                 throw new IllegalArgumentException(
@@ -76,6 +75,8 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             spec.maxParallelUsages.set(1)
         })
 
+        // Intermediate "private" tasks marked with _
+
         final def taskGenerateCss = project.tasks.register("_taskGenerateCss", GenerateCssTask) {
             description = "Copy the CSS to the build/report/css folder"
             group = PLUGIN_TASKS_GROUP
@@ -90,6 +91,8 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             excludedPlugins.convention(catalogMonitorExtension.excludedPlugins)
         }
 
+        // Main Tasks
+
         def taskGenerateReport = project.tasks.register("generateReport", GenerateReportTask) {
             description = "Generates reportName report on the dependency update status in the catalog"
             group = PLUGIN_TASKS_GROUP
@@ -99,18 +102,26 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
             outputs.upToDateWhen { false }
         }
 
-        project.tasks.register("_printCatalogContent", PrintCatalogContentTask) {
-            description = "Print the catalog content"
-            group = PLUGIN_TASKS_GROUP
-            versionCatalog.convention(catalogMonitorExtension.versionCatalog)
-        }
-
         project.tasks.register("updateDependenciesInTomlCatalog", UpdateCatalogTask) {
             description = "Updates automatically the dependencies in the catalog toml file"
             group = PLUGIN_TASKS_GROUP
             dependsOn(taskGenerateReport)
             fileCatalogToml.convention(catalogMonitorExtension.fileCatalogToml)
             fileJsonReport.convention(catalogMonitorExtension.fileJsonReport)
+        }
+
+        // Print Tasks
+
+        project.tasks.register("printCatalogResolved", PrintCatalogResolvedTask) {
+            description = "Print all the plugins and dependencies declared in the build.gradle with their actual form"
+            group = PLUGIN_TASKS_GROUP
+            versionCatalog.convention(catalogMonitorExtension.versionCatalog)
+        }
+
+        project.tasks.register("printCatalogContent", PrintCatalogContentTask) {
+            description = "Print the catalog content"
+            group = PLUGIN_TASKS_GROUP
+            versionCatalog.convention(catalogMonitorExtension.versionCatalog)
         }
     }
 

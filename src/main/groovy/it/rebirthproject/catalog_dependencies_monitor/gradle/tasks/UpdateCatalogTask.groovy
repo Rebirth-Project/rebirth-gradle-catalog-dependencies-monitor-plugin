@@ -53,24 +53,26 @@ abstract class UpdateCatalogTask extends DefaultTask {
         log.info("Searching for libraries to update in toml catalog...")
         int numOfUpdatedLibs = catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, mavenRepositoryType)
         if (numOfUpdatedLibs > 0) {
-            println String.format("%s libraries updated in toml catalog", numOfUpdatedLibs)
+            def libsSuffix = (numOfUpdatedLibs == 1) ? "library" : "libraries"
+            println("$numOfUpdatedLibs $libsSuffix updated in toml catalog")
         }
 
         log.info("Searching for plugins to update in toml catalog...")
         int numOfUpdatedPlugins = catalogUpdateService.updateOutdatedDependencies(catalogFile, jsonReportFile, DependenciesRepositoryType.GRADLE_PLUGINS_PORTAL)
         if (numOfUpdatedPlugins > 0) {
-            println String.format("%s plugins updated in toml catalog", numOfUpdatedPlugins)
+            def pluginSuffix = (numOfUpdatedPlugins == 1) ? "plugin" : "plugins"
+            println("$numOfUpdatedPlugins $pluginSuffix updated in toml catalog")
         }
 
         if (numOfUpdatedLibs == 0 && numOfUpdatedPlugins == 0) {
-            println "All the dependencies in the toml catalog are up to date"
+            println("All the dependencies in the toml catalog are already up to date")
         }
     }
 
     private static void checkIfFileExistsOrThrowException(File file) {
         log.debug("checking existance of file: ${file}")
         if (file == null || !file.exists() || !file.isFile()) {
-            throw new GradleException("file ${file?.name} doesn't exist or is not a file")
+            throw new GradleException("file ${file?.name} doesn't exist or it's not a file")
         }
         log.debug("file ${file.name} exists")
     }

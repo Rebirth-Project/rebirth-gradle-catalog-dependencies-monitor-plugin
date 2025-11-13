@@ -32,6 +32,7 @@ abstract class PrintCatalogContentTask extends DefaultTask {
     @TaskAction
     void executeTask() {
         final VersionCatalog versionCatalog = versionCatalog.get()
+
         println "version catalog name: ${versionCatalog.name}"
         println ""
         println "[versions]"

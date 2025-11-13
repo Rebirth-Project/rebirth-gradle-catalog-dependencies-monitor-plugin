@@ -1,0 +1,129 @@
+/*
+ * Copyright (C) 2025 Matteo Veroni Rebirth project
+ * Modifications Copyright (C) 2025 Andrea Paternesi Rebirth project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id "java"
+    id("it.rebirth-project.catalog-dependencies-monitor") version "+"
+    alias(libs.plugins.gradle.spring.boot)
+    alias(libs.plugins.gradle.spring.dependency.management)
+}
+
+// NOTE: Needed for build
+springBoot {
+    mainClass = 'fakepackage.EmptyMain'
+}
+
+catalogDependenciesMonitor {
+    versionCatalog = project.extensions.getByType(VersionCatalogsExtension).named("libs")
+    excludedLibraries = []
+    excludedPlugins = []
+    libraryVersionFilters = ["alpha", "beta", "RC", "M"]
+    pluginVersionFilters = ["alpha", "beta", "RC", "M"]
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Lombok
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+    annotationProcessor(libs.lombok.mapstruct.binding)
+
+    // MapStruct
+    implementation(libs.mapstruct)
+    implementation(libs.mapstruct.spring.boot.starter)
+    annotationProcessor(libs.mapstruct.processor)
+
+    // Xml
+    implementation(libs.jakarta.xml.bind)
+    implementation(libs.jaxb.runtime)
+
+    // Csv
+    implementation(libs.opencsv)
+
+    // Database
+    implementation(libs.sqlite.jdbc)
+    implementation(libs.hibernate.community.dialects)
+
+    // Caching
+    implementation(libs.caffeine)
+
+    // Fault tolerance management (Resilience4j)
+    implementation(libs.resilience4j)
+
+    // JJWT (Json web token)
+    implementation(libs.jjwt.api)
+    implementation(libs.jjwt.impl)
+    implementation(libs.jjwt.jackson)
+
+    // Spring Boot Starters
+    implementation(libs.spring.boot.starter.cache)
+    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.spring.boot.starter.actuator)
+    implementation(libs.spring.boot.starter.data.jpa)
+    implementation(libs.spring.boot.starter.security)
+    implementation(libs.spring.boot.starter.web)
+
+    // Spring OpenAPI
+    implementation(libs.springdoc.openapi.ui)
+
+    // Old Way to declare TESTING DEPENDENCIES
+
+    // Lombok and MapStruct
+    testCompileOnly(libs.lombok)
+    testAnnotationProcessor(libs.lombok)
+    testAnnotationProcessor(libs.lombok.mapstruct.binding)
+    testAnnotationProcessor(libs.mapstruct.processor)
+
+    // Database
+    testImplementation(libs.sqlite.jdbc)
+
+    // JUnit Platform Launcher
+    testRuntimeOnly(libs.junit.platform.launcher)
+
+    // AssertJ
+    testImplementation libs.assertj.core
+}
+
+// New way to declare TESTING DEPENDENCIES
+//
+//testing {
+//    suites {
+//        configureEach {
+//            useJUnitJupiter()
+//
+//            dependencies {
+//                // Lombok and MapStruct
+//                compileOnly(libs.lombok)
+//                annotationProcessor(libs.lombok)
+//                annotationProcessor(libs.lombok.mapstruct.binding)
+//                annotationProcessor(libs.mapstruct.processor)
+//
+//                // Database
+//                implementation(libs.sqlite.jdbc)
+//
+//                // JUnit Platform Launcher
+//                runtimeOnly(libs.junit.platform.launcher)
+//
+//                // AssertJ
+//                implementation libs.assertj.core
+//            }
+//        }
+//    }
+//}

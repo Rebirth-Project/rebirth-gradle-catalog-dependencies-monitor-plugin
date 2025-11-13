@@ -1,0 +1,69 @@
+# Copyright (C) 2025 Matteo Veroni Rebirth project
+# Modifications Copyright (C) 2025 Andrea Paternesi Rebirth project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+[versions]
+# Libraries Versions
+jaxbVersion = "4.0.6"
+opencsvVersion = "5.12.0"
+jakartaXmlBindVersion = "4.0.4"
+mapstructVersion = "1.6.3"
+mapstructSpringBootStarterVersion = "1.0.1"
+mapstructBindingVersionVersion = "0.2.0"
+sqliteVersion = "3.51.0.0"
+caffeineVersion = "3.2.3"
+springdocVersion = "2.8.14"
+assertjVersion = "3.27.6"
+jjwtVersion = "0.13.0"
+resilience4jVersion = "2.3.0"
+
+# Gradle Plugins Versions
+gradlePluginSpringBootVersion = "3.5.7"
+gradlePluginSpringDependencyManagementVersion = "1.1.7"
+
+# Other Versions
+javaVersion = "25"
+gradleWrapperVersion = "9.2.0"
+
+[libraries]
+jakarta-xml-bind = { module = "jakarta.xml.bind:jakarta.xml.bind-api", version.ref = "jakartaXmlBindVersion" }
+jaxb-runtime = { module = "org.glassfish.jaxb:jaxb-runtime", version.ref = "jaxbVersion" }
+opencsv = { module = "com.opencsv:opencsv", version.ref = "opencsvVersion" }
+mapstruct = { module = "org.mapstruct:mapstruct", version.ref = "mapstructVersion" }
+mapstruct-processor = { module = "org.mapstruct:mapstruct-processor", version.ref = "mapstructVersion" }
+mapstruct-spring-boot-starter = { module = "com.codestackfoundry.starters:mapstruct-spring-boot-starter", version.ref = "mapstructSpringBootStarterVersion" }
+lombok = { module = "org.projectlombok:lombok" }
+lombok-mapstruct-binding = { module = "org.projectlombok:lombok-mapstruct-binding", version.ref = "mapstructBindingVersionVersion" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqliteVersion" }
+hibernate-community-dialects = { module = "org.hibernate.orm:hibernate-community-dialects" }
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeineVersion" }
+resilience4j = { module = "io.github.resilience4j:resilience4j-spring-boot3", version.ref = "resilience4jVersion" }
+springdoc-openapi-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdocVersion" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwtVersion" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwtVersion" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwtVersion" }
+spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
+spring-boot-starter-fakepackage = { module = "org.springframework.boot:spring-boot-starter-fakepackage" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertjVersion" }
+
+[plugins]
+gradle-spring-boot = { id = "org.springframework.boot", version.ref = "gradlePluginSpringBootVersion" }
+gradle-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "gradlePluginSpringDependencyManagementVersion" }
