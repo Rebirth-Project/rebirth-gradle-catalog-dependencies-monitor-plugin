@@ -82,6 +82,7 @@ catalogDependenciesMonitor {
 You can find the plugin tasks under the task group **Catalog-monitor**.
 The tasks whose name starts with a **_** are internal and are not meant to be used, whereas the main plugin tasks are:
 
+* The Gradle task **printCatalogContent** just prints out the catalog content and all defined dependencies
 * The Gradle task **generateReport**. Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the
   build/catalog-dependencies-monitor/ directory.
 * The Gradle task **updateDependenciesInTomlCatalog** to automatically update your catalog toml file. We’ve been using this task for quite
