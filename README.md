@@ -60,7 +60,7 @@ catalogDependenciesMonitor {
     // (optional) exclude library versions containing these strings (alpha and beta if you want to monitor only production ready libs)
     libraryVersionFilters = ["alpha", "beta"]
     
-    // (optional) exclude plugin versions containing these strings (alpha and beta if you want to monitor only production ready libs)
+    // (optional) exclude plugin versions containing these strings (alpha and beta if you want to monitor only production ready plugins)
     pluginVersionFilters = ["alpha", "beta"]                               
 
     // (optional) specify the name of the generated report (catalog_report is the default if not specified)
@@ -80,30 +80,29 @@ catalogDependenciesMonitor {
 ## Plugin tasks
 
 You can find the plugin tasks under the task group **Catalog-monitor**.
-The tasks whose name starts with a **_** are internal and are not meant to be used, whereas the main plugin tasks are:
+The tasks whose name starts with **_** are internal and are not meant to be used, whereas the other plugin tasks are:
 
-* The Gradle task **printCatalogContent** just prints out the catalog content and all defined dependencies
-* The Gradle task **generateReport**. Using this will generate reports (catalog_report.html or catalog_report.json, or both) inside the
+### Main tasks
+
+* **generateReport** - Generates reports (catalog_report.html or catalog_report.json, or both) inside the
   build/catalog-dependencies-monitor/ directory.
-* The Gradle task **updateDependenciesInTomlCatalog** to automatically update your catalog toml file. We’ve been using this task for quite
+* **updateDependenciesInTomlCatalog** - Automatically update your catalog toml file. We’ve been using this task for quite
   some time, although we still consider it experimental. It works very well, but it may contain some bugs. Please use it and let us know
   what you think or report any issues you encounter. Note that it simply updates the versions in the toml file. It never commits any changes
   to git.
 
+### Print tasks
+* **printCatalogContent** - Prints out the catalog content and all defined dependencies
+* **printCatalogResolved** - Print all the plugins and dependencies declared in the build.gradle with their actual form (plugins { ... id("plugin_id") version "plugin_version" ...} dependencies { ... implementation("group:name:version") ... })
+
 ## Contributors
 
-If you would like to help but don't know where to start, please note that finding bugs and debugging the code is always
-a good start.
-Simple Pull Requests that fix anything other than Version Comparator core code (documentation, Javadoc, typos, test
-cases, etc) are
-always appreciated and would be merged quickly.
-However, if you want or feel the need to change the main code or add a new functionality, please do not issue a pull
-request
-without [creating a new  issue](https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin/issues/new)
-and discussing your desired
-changes, _**before you start working on it**_.
-It would be a shame to reject your pull request if it might not align with the project's goals, design expectations or
-planned functionality.
+If you would like to help but don't know where to start, please note that finding bugs and debugging the code is always a good start.
+Simple Pull Requests that fix anything other than Version Comparator core code (documentation, Javadoc, typos, test cases, etc.) are always 
+appreciated and would be merged quickly.
+However, if you want or feel the need to change the main code or add a new functionality, please do not issue a pull request without [creating a new  issue](https://github.com/Rebirth-Project/rebirth-gradle-catalog-dependencies-monitor-plugin/issues/new)
+and discussing your desired changes, _**before you start working on it**_. 
+It would be a shame to reject your pull request if it might not align with the project's goals, design expectations or planned functionality.
 
 For direct communications, you can use this [email](mailto:rebirthproject2021@gmail.com)
 
@@ -115,4 +114,4 @@ Copyright (C) 2025 [Matteo Veroni](https://github.com/mavek87)
 
 Current website under creation [Rebirth Project](https://www.rebirth-project.it)
 
-Gradle catalog sependencies monitor Plugin binaries and source code can be used according to the [Apache License, Version 2.0](LICENSE.md).
+Gradle catalog dependencies monitor Plugin binaries and source code can be used according to the [Apache License, Version 2.0](LICENSE.md).
