@@ -40,9 +40,20 @@ class CatalogUpdateService {
         final def jsonReportContent = jsonReader.parse(jsonReportFile)
         log.debug("jsonReportContent: ${jsonReportContent}")
 
-        def specificJsonReportContent = switch (dependenciesRepositoryType) {
-            case MAVEN_CENTRAL_V1, MAVEN_CENTRAL_V2 -> jsonReportContent?.librariesReport
-            case GRADLE_PLUGINS_PORTAL -> jsonReportContent?.pluginsReport
+//        def specificJsonReportContent = switch (dependenciesRepositoryType) {
+//        case MAVEN_CENTRAL_V1, MAVEN_CENTRAL_V2 -> jsonReportContent?.librariesReport
+//        case GRADLE_PLUGINS_PORTAL -> jsonReportContent?.pluginsReport
+//        }      
+        
+        def specificJsonReportContent
+        switch (dependenciesRepositoryType) {
+        case [MAVEN_CENTRAL_V1, MAVEN_CENTRAL_V2]:
+            specificJsonReportContent = jsonReportContent?.librariesReport
+            break
+
+        case GRADLE_PLUGINS_PORTAL:
+            specificJsonReportContent = jsonReportContent?.pluginsReport
+            break
         }
 
         log.debug("specificJsonReportContent: ${specificJsonReportContent}")
