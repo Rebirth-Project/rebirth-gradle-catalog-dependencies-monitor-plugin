@@ -27,8 +27,6 @@ plugins {
     id("com.gradle.plugin-publish") version "2.0.0"
 }
 
-group = "it.rebirth-project"
-
 project.ext {
     Date buildTimeAndDate = new Date()
     buildDate = new SimpleDateFormat("dd-MM-yyyy").format(buildTimeAndDate)
@@ -74,7 +72,7 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:5.20.0")
     mockitoAgent("org.mockito:mockito-core:5.20.0") { transitive = false }
 
-    testImplementation("org.junit.jupiter:junit-jupiter:6.0.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
