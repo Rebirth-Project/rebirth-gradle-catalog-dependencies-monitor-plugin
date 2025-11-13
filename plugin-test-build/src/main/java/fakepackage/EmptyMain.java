@@ -21,5 +21,6 @@ package fakepackage;
 public class EmptyMain {
 
     public static void main(String[] args) {
+        throw new UnsupportedOperationException("This is just an empty main class to make the build happy :)");
     }
 }

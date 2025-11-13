@@ -16,7 +16,7 @@
  */
 
 plugins {
-    id "java"
+    id("java")
     id("it.rebirth-project.catalog-dependencies-monitor") version "+"
     alias(libs.plugins.gradle.spring.boot)
     alias(libs.plugins.gradle.spring.dependency.management)
@@ -102,6 +102,7 @@ dependencies {
 }
 
 // New way to declare TESTING DEPENDENCIES
+// (Uncomment here and comment test deps before to check that the printCatalogResolved task works as expected. At the moment it is ok)
 //
 //testing {
 //    suites {
