@@ -33,7 +33,7 @@ class HttpClient {
                 final String response = reader.lines().collect(Collectors.joining("\n"))
                 return Optional.of(response)
             } else {
-                log.error("Error during the GET request: {} {}", connection.responseCode, connection.responseMessage)
+                log.error("Error during the GET request: {} {} {}", connection.responseCode, connection.responseMessage, url)
             }
         } catch (Exception e) {
             log.error("exception: {}", e.getMessage())
