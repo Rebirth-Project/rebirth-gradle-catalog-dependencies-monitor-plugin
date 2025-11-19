@@ -14,12 +14,13 @@ your catalog are up to date or need updating.
 ## Main features
 
 * Checks all the defined dependencies in a standard Gradle catalog
+* Auto-update old catalog dependencies
 
 ## Goals
 
-* Provide a simple-to-use plugin to speed up and simplify dependencies' version check
+* Provide a simple-to-use plugin to speed up and simplify dependencies' version check and management
 
-## How to add Catalog Dependencies Monitor plugin in your Gradle project
+## How to import the plugin in your Gradle project
 
 ```
 plugins {
@@ -39,12 +40,16 @@ It produces a detailed report in **HTML** or a **JSON** format, showing the resu
 The report is divided into two parts: the libraries' report and the plugins' report. Each report will visualize the status of the relative
 libraries or plugins.
 
-## Plugin general usage
+## Plugin Video Tutorial
 
-After importing the plugin, you can use this Gradle definition to set up the plugin in the build.gradle file and after that running the
+If you prefer learning by watching, here’s a video tutorial you can follow instead of reading the entire documentation :)
+
+[![Watch the video tutorial](https://img.youtube.com/vi/nPUohtjVACg/0.jpg)](https://www.youtube.com/watch?v=nPUohtjVACg)
+
+## Plugin Configuration and General Usage
+
+After importing the plugin, you can use the Gradle definition to set up the plugin in the build.gradle file and after that running the
 plugin tasks.
-
-## Plugin configuration
 
 ```
 catalogDependenciesMonitor {
@@ -77,12 +82,12 @@ catalogDependenciesMonitor {
 }
 ```
 
-## Plugin tasks
+## Plugin Tasks
 
 You can find the plugin tasks under the task group **Catalog-monitor**.
 The tasks whose name starts with **_** are internal and are not meant to be used, whereas the other plugin tasks are:
 
-### Main tasks
+### Main Tasks
 
 * **generateReport** - Generates reports (catalog_report.html or catalog_report.json, or both) inside the
   build/catalog-dependencies-monitor/ directory.
@@ -91,7 +96,7 @@ The tasks whose name starts with **_** are internal and are not meant to be used
   what you think or report any issues you encounter. Note that it simply updates the versions in the toml file. It never commits any changes
   to git.
 
-### Print tasks
+### Print Tasks
 * **printCatalogContent** - Prints out the catalog content and all defined dependencies
 * **printCatalogResolved** - Print all the plugins and dependencies declared in the build.gradle with their actual form (plugins { ... id("plugin_id") version "plugin_version" ...} dependencies { ... implementation("group:name:version") ... })
 
