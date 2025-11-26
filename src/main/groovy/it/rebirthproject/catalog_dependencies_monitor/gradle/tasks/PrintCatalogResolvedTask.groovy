@@ -17,9 +17,7 @@
 package it.rebirthproject.catalog_dependencies_monitor.gradle.tasks
 
 import org.gradle.api.DefaultTask
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.VersionCatalog
-import org.gradle.api.provider.Property
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
@@ -41,56 +39,19 @@ abstract class PrintCatalogResolvedTask extends DefaultTask {
     ]
 
     @Input
-    abstract Property<VersionCatalog> getVersionCatalog()
+    final ListProperty<String> resolvedPlugins = project.objects.listProperty(String)
+
+    @Input
+    final ListProperty<String> resolvedDeps = project.objects.listProperty(String)
 
     @TaskAction
     def printDeps() {
-        final VersionCatalog catalog = versionCatalog.get()
-
-        println("plugins {")
-        resolveCatalogPlugins(catalog)
+        println("\nplugins {")
+        resolvedPlugins.get().each { println("\t${it}")}
         println("}")
 
         println("\ndependencies {")
-        resolveCatalogDependencies()
+        resolvedDeps.get().each { println("\t${it}") }
         println("}")
-    }
-
-    private void resolveCatalogPlugins(VersionCatalog catalog) {
-        catalog.pluginAliases.each { alias ->
-            catalog.findPlugin(alias).ifPresent { pluginDep ->
-                def id = pluginDep.get().pluginId
-                def version = pluginDep.get().version
-
-                if (project.pluginManager.hasPlugin(id)) {
-                    String idStarter = "\tid(\"${id}\""
-                    String versionFinisher = (version) ? ") version \"${version}\"" : ")"
-                    println "${idStarter}${versionFinisher}"
-                }
-            }
-        }
-    }
-
-    private void resolveCatalogDependencies() {
-        project.configurations.each { Configuration config ->
-            config.dependencies.each { dep ->
-
-                // NOTE 2: No filter applied here yet. It should work for all the gradle configurations, but maybe there are cases where
-                // to esclude one of them make sense? In that case see also NOTE 1.
-
-//                if (!MAIN_CONFIGS.contains(config.name)) return
-                try {
-                    def depStr
-                    if (dep.hasProperty("group") && dep.hasProperty("name") && dep.hasProperty("version")) {
-                        depStr = "${dep.group}:${dep.name}${dep.version ? ":" + dep.version : ''}"
-                    } else {
-                        depStr = dep.toString()
-                    }
-                    println "\t${config.name}(\"${depStr}\")"
-                } catch (Exception ignored) {
-                    println "\t${config.name} ${dep} (cannot resolve)"
-                }
-            }
-        }
     }
 }

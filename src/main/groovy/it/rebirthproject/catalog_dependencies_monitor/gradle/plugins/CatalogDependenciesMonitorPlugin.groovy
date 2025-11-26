@@ -21,6 +21,7 @@ import it.rebirthproject.catalog_dependencies_monitor.gradle.extensions.CatalogM
 import it.rebirthproject.catalog_dependencies_monitor.gradle.tasks.*
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalog
 
 import java.util.jar.JarFile
 
@@ -115,7 +116,46 @@ class CatalogDependenciesMonitorPlugin implements Plugin<Project> {
         project.tasks.register("printCatalogResolved", PrintCatalogResolvedTask) {
             description = "Print all the plugins and dependencies declared in the build.gradle with their actual form"
             group = PLUGIN_TASKS_GROUP
-            versionCatalog.convention(catalogMonitorExtension.versionCatalog)
+            resolvedPlugins.set(
+                    project.provider {
+                        def catalog = catalogMonitorExtension.versionCatalog.get() // risolvi qui il valore reale
+                        def result = []
+                        catalog.pluginAliases.each { alias ->
+                            catalog.findPlugin(alias).ifPresent { pluginDep ->
+                                def id = pluginDep.get().pluginId
+                                def version = pluginDep.get().version
+
+                                if (project.pluginManager.hasPlugin(id)) {
+                                    String idStarter = "\tid(\"${id}\""
+                                    String versionFinisher = (version) ? ") version \"${version}\"" : ")"
+                                    result << "${idStarter}${versionFinisher}"
+                                }
+                            }
+                        }
+                        result
+                    }
+            )
+            resolvedDeps.set(
+                    project.provider {
+                        def result = []
+                        project.configurations.each { config ->
+                            config.dependencies.each { dep ->
+                                try {
+                                    def depStr
+                                    if (dep.hasProperty("group") && dep.hasProperty("name") && dep.hasProperty("version")) {
+                                        depStr = "${dep.group}:${dep.name}${dep.version ? ":" + dep.version : ''}"
+                                    } else {
+                                        depStr = dep.toString()
+                                    }
+                                    result << "${config.name}(\"${depStr}\")"
+                                } catch (Exception ignored) {
+                                    result << "${config.name} ${dep} (cannot resolve)"
+                                }
+                            }
+                        }
+                        result
+                    }
+            )
         }
 
         project.tasks.register("printCatalogContent", PrintCatalogContentTask) {
